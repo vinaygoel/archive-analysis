@@ -1,0 +1,41 @@
+/*
+ * Copyright 2013 Internet Archive
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you
+ * may not use this file except in compliance with the License. You
+ * may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ */
+
+
+DEFINE TF_IDF(inRelation, docField, textField) RETURNS outRelation {
+  Docs = FOREACH $inRelation GENERATE $docField as doc, FLATTEN(TOKENIZE($textField)) as term;
+  
+  DocWordTotals = FOREACH (GROUP Docs by (doc, term)) GENERATE FLATTEN(group) as (doc, term), COUNT(Docs) as docTotal;
+  TermCounts = FOREACH (GROUP DocWordTotals by doc) GENERATE
+  			group AS doc,
+    			FLATTEN(DocWordTotals.(term, docTotal)) as (term, docTotal), 
+    			SUM(DocWordTotals.docTotal) as docSize;
+  TermFreq = FOREACH TermCounts generate doc as doc, term as term, ((double)docTotal / (double)docSize) AS tf;
+  
+  -- get number of docs containing a given term
+  TermUsage = FOREACH (GROUP TermFreq BY term) GENERATE FLATTEN(TermFreq) as (doc,term,tf), COUNT(TermFreq) as numDocsWithTerm;
+  
+  DocIds = FOREACH Docs GENERATE doc;
+  DocIds = DISTINCT DocIds;
+  NumDocs = FOREACH (GROUP DocIds ALL) generate COUNT(DocIds) as numDocs;
+  
+  -- TF-IDF
+  $outRelation = FOREACH TermUsage {
+    idf = LOG((double)NumDocs.numDocs/(double)numDocsWithTerm);
+    tfidf = (double)tf * idf;
+    GENERATE doc as $docField, term as term, tfidf as tfidf;
+  };
+};
