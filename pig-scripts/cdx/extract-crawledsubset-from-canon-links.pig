@@ -14,6 +14,11 @@
  * permissions and limitations under the License. 
  */
 
+/* Input: Canonicalized link data (src,timestamp,dst,path,linktext)
+ * Input: CDX (wayback index files for the collection(s))
+ * Output: Canonicalized link data where every dst is in the CDX (i.e. dst has been crawled)
+ */
+
 %default I_CANON_LINKS_DATA_DIR '/search/nara/congress112th/canon-links-from-wats.gz/';
 %default I_CDX_DIR '/search/nara/congress112th/cdx/';
 %default O_CRAWLED_CANON_LINKS_DATA_DIR '/search/nara/congress112th/crawled-canon-links-from-wats.gz/';
