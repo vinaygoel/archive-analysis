@@ -14,15 +14,18 @@
  * permissions and limitations under the License.
  */
 
-/* Input: Indegree counts, Outdegree counts and the PageRank ranks for each doc
- * Output: Lines containing Outdegree, Indegree and Pagerank ranks for each doc
+/* Input: Indegree counts, Outdegree counts and the PageRank ranks for each doc (id)
+ * Input: The id.map data 
+ * Output: Lines containing Outdegree, Indegree and Pagerank ranks for each doc (url)
  */
 
+%default I_ID_MAP_DIR '/search/nara/congress112th/id.map.gz/';
 %default I_OUTDEGREE_DIR '/search/nara/congress112th/degree-analysis.gz/id-numoutlinks.gz/';
 %default I_INDEGREE_DIR '/search/nara/congress112th/degree-analysis.gz/id-numinlinks.gz/';
 %default I_PR_RANK_ALL_NODES '/search/nara/congress112th/pr-rank-nodeid-score-all-nodes.gz';
-%default O_OUTDEGREE_INDEGREE_PR_RANK '/search/nara/congress112th/nodeid-outDegree-inDegree-prRank.gz/';
+%default O_OUTDEGREE_INDEGREE_PR_RANK '/search/nara/congress112th/canonurl-outDegree-inDegree-prRank.gz/';
 
+idMap = LOAD '$I_ID_MAP_DIR' AS (id:chararray, url:chararray);
 outDegrees = LOAD '$I_OUTDEGREE_DIR' as (id:chararray, outDegree:long);
 inDegrees = LOAD '$I_INDEGREE_DIR' as (id:chararray, inDegree:long);
 
@@ -46,4 +49,7 @@ outInData = FOREACH outInData GENERATE outData::id as id, outData::outDegree as 
 outInPrData = JOIN outInData by id left, prRanks by id;
 outInPrData = FOREACH outInPrData GENERATE outInData::id as id, outInData::outDegree as outDegree, outInData::inDegree as inDegree, (prRanks::prRank is null?0:prRanks::prRank) as prRank;
 
-STORE outInPrData INTO '$O_OUTDEGREE_INDEGREE_PR_RANK';
+result = JOIN idMap BY id, outInPrData by id;
+result = FOREACH result GENERATE idMap::url, outInPrData::outDegree, outInPrData::inDegree, outInPrData::prRank;
+
+STORE result INTO '$O_OUTDEGREE_INDEGREE_PR_RANK';
