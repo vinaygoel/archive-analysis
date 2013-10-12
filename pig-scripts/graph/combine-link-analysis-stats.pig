@@ -25,6 +25,8 @@
 %default I_PR_RANK_ALL_NODES '/search/nara/congress112th/pr-rank-nodeid-score-all-nodes.gz';
 %default O_OUTDEGREE_INDEGREE_PR_RANK '/search/nara/congress112th/canonurl-outDegree-inDegree-prRank.gz/';
 
+%default PRRANK_FOR_UNKNOWN_PAGE '1000000000';
+
 idMap = LOAD '$I_ID_MAP_DIR' AS (id:chararray, url:chararray);
 outDegrees = LOAD '$I_OUTDEGREE_DIR' as (id:chararray, outDegree:long);
 inDegrees = LOAD '$I_INDEGREE_DIR' as (id:chararray, inDegree:long);
@@ -47,9 +49,10 @@ outInData = JOIN outData by id left, inDegrees by id;
 outInData = FOREACH outInData GENERATE outData::id as id, outData::outDegree as outDegree, (inDegrees::inDegree is null?0:inDegrees::inDegree) as inDegree; 
 
 outInPrData = JOIN outInData by id left, prRanks by id;
-outInPrData = FOREACH outInPrData GENERATE outInData::id as id, outInData::outDegree as outDegree, outInData::inDegree as inDegree, (prRanks::prRank is null?0:prRanks::prRank) as prRank;
+outInPrData = FOREACH outInPrData GENERATE outInData::id as id, outInData::outDegree as outDegree, outInData::inDegree as inDegree, (prRanks::prRank is null?$PRRANK_FOR_UNKNOWN_PAGE:prRanks::prRank) as prRank;
+--PR Rank set to a very high value when unknown
 
 result = JOIN idMap BY id, outInPrData by id;
-result = FOREACH result GENERATE idMap::url, outInPrData::outDegree, outInPrData::inDegree, outInPrData::prRank;
+result = FOREACH result GENERATE idMap::url as url, outInPrData::outDegree as outDegree, outInPrData::inDegree as inDegree, outInPrData::prRank as prRank;
 
 STORE result INTO '$O_OUTDEGREE_INDEGREE_PR_RANK';
