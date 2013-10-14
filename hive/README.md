@@ -129,7 +129,7 @@ hive > select regexp_extract(url,'(https?:\/\/|dns:)?([^\/]+).*',2) as host, cou
 Store results of query in local file:
 
 ```
-hive > insert overwrite local directory '/tmp/example4/' select url, hoppath from crawllogtable where partner="loc" and col="monthly" and instance="033" and hoppath like '%RR'  limit 10;
+hive > insert overwrite local directory '/tmp/example/' select url, hoppath from crawllogtable where partner="loc" and col="monthly" and instance="033" and hoppath like '%RR'  limit 10;
 ```
 
 The default delimiter for the stored results file is Ctrl-A. So, to replace delimiter by a " ", run a simple sed command.
