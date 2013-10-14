@@ -49,7 +49,9 @@ Links = FILTER Links by dst is not null;
 
 -- remove self links
 Links = FILTER Links by src!=dst;
-
 Links = DISTINCT Links;
+
+--EmbedLinks = FILTER Links by (path != 'A@/href') AND (path != 'FORM@/action');
+--OutLinks = FILTER Links by (path == 'A@/href') OR (path == 'FORM@/action');
 
 STORE Links INTO '$O_LINKS_DATA_DIR';
