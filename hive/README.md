@@ -45,8 +45,9 @@ Loading Data
 ------------
 
 The external table crawllogtable points to specific locations in HDFS. The actual crawl log data is stored in HDFS as text files. 
-Note that we have defined the table to be partitioned by partner, collection (col) and crawl-instance (instance). 
-This allows the user to query all the crawl logs or efficiently query a subset of them as defined by the partitions (e.g. query only LOC-MONTHLY-033 crawl logs or query only LOC crawl logs etc.)
+
+Note that we have defined the table to be partitioned by partner, collection (col) and crawl-instance (instance). This allows the user to query all the crawl logs or efficiently query a subset of them as defined by the partitions (e.g. query only LOC-MONTHLY-033 crawl logs or query only LOC crawl logs etc.)
+
 The HDFS locations for the crawl logs are organized as /crawl-logs/{partner}/{collection}/{instance}/. So, LOC-MONTHLY-033 crawl logs will be stored in /crawl-logs/loc/monthly/033/
 
 
@@ -55,7 +56,6 @@ Store log data into HDFS:
 ```
 $ /home/webcrawl/hadoop/bin/hadoop fs -mkdir /crawl-logs/loc/monthly/033/
 $ /home/webcrawl/hadoop/bin/hadoop fs -put crawl.log /crawl-logs/loc/monthly/033/
-
 ```
 
 Define new partition in the crawllogtable (example: LOC-MONTHLY-033):
