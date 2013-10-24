@@ -1,0 +1,46 @@
+
+*****************************************************
+Summary
+-------
+Generated at: 2013-10-23T23:57:54+00:00
+Notes: 0
+Binaries: 0
+Archives: 0
+Standards: 9
+
+Apache Licensed: 9
+Generated Documents: 0
+
+JavaDocs are generated and so license header is optional
+Generated files do not required license headers
+
+0 Unknown Licenses
+
+*******************************
+
+Unapproved licenses:
+
+
+*******************************
+
+Archives:
+
+*****************************************************
+  Files with Apache License headers will be marked AL
+  Binary files (which do not require AL headers) will be marked B
+  Compressed archives will be marked A
+  Notices, licenses etc will be marked N
+  AL    src/main/assembly/compile.xml
+  AL    src/main/java/org/archive/giraph/InDegreeCountVertex.java
+  AL    src/main/java/org/archive/giraph/OutDegreeCountVertex.java
+  AL    src/main/java/org/archive/giraph/Algorithm.java
+  AL    src/main/java/org/archive/giraph/GeneratedVertexReader.java
+  AL    src/main/java/org/archive/giraph/PageRankVertex.java
+  AL    src/main/java/org/archive/giraph/LongDoubleFloatTextInputFormat.java
+  AL    src/main/java/org/archive/giraph/package-info.java
+  AL    pom.xml
+ 
+ *****************************************************
+ Printing headers for files without AL header...
+ 
+ 
