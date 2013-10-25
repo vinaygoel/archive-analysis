@@ -23,6 +23,7 @@ import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
+import org.apache.hadoop.io.Text;
 
 /**
  * Simple function to return the in degree for each vertex.
@@ -30,23 +31,23 @@ import org.apache.hadoop.io.LongWritable;
 @Algorithm(
     name = "Indegree Count"
 )
-public class InDegreeCountVertex extends Vertex<
-  LongWritable, DoubleWritable, FloatWritable, DoubleWritable> {
+public class InDegreeCountVertexWithTextValue extends Vertex<
+  LongWritable, Text, Text, Text> {
 
   @Override
-  public void compute(Iterable<DoubleWritable> messages) {
+  public void compute(Iterable<Text> messages) {
     if (getSuperstep() == 0) {
-      Iterable<Edge<LongWritable, FloatWritable>> edges = getEdges();
-      for (Edge<LongWritable, FloatWritable> edge : edges) {
-        sendMessage(edge.getTargetVertexId(), new DoubleWritable(1.0));
+      Iterable<Edge<LongWritable, Text>> edges = getEdges();
+      for (Edge<LongWritable, Text> edge : edges) {
+        sendMessage(edge.getTargetVertexId(), new Text("1"));
       }
     } else {
       long sum = 0;
-      for (DoubleWritable message : messages) {
+      for (Text message : messages) {
         sum++;
       }
-      DoubleWritable vertexValue = getValue();
-      vertexValue.set(sum);
+      Text vertexValue = getValue();
+      vertexValue.set(Double.toString(sum));
       setValue(vertexValue);
       voteToHalt();
     }
