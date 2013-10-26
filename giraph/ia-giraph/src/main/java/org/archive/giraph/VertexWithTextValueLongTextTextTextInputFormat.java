@@ -99,14 +99,15 @@ public class VertexWithTextValueLongTextTextTextInputFormat
       //float weight = 1.0f / (tokens.length - 1);
       for (int n = 2; n < tokens.length; n++) {
         String[] splits = tokens[n].split(":");
-        edges.add(EdgeFactory.create(
-            new LongWritable(Long.parseLong(splits[0])),
-            new Text(splits[1])));
-      }
+        if(splits.length == 2) {
+	  edges.add(EdgeFactory.create(
+              new LongWritable(Long.parseLong(splits[0])),
+              new Text(splits[1])));
+        }
+       }
 
       LongWritable vertexId = new LongWritable(Long.parseLong(tokens[0]));
       vertex.initialize(vertexId, vertexWeight, edges);
-
       return vertex;
     }
 

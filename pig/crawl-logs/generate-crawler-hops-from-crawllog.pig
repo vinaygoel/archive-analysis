@@ -21,7 +21,7 @@
 
 %default I_CRAWLLOG_DATA_DIR '/user/vinay/input/test.crawl.log';
 %default O_CRAWL_ID_MAP_DIR '/user/vinay/input/crawl.id.map.gz';
-%default O_CRAWL_ID_HOPPATH_DIR '/user/vinay/input/crawl.id.hoppath.gz';
+%default O_CRAWL_ID_HOPPATH_DIR '/user/vinay/input/crawl.id.hoppath';
 
 REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
 
