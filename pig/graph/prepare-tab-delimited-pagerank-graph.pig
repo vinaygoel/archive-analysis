@@ -29,7 +29,7 @@
 -- Workaround to ensure a non empty Relation in Pig
 %default I_DUMMY_FILE '/search/nara/congress112th/dummy-file';
 
-%default O_PR_TAB_ID_GRAPH_DIR '/search/nara/congress112th/pr-tab-id.graph.gz';
+%default O_PR_TAB_ID_GRAPH_DIR '/search/nara/congress112th/pr-tab-id.graph';
 %default O_PR_DANGLING_NODES '/search/nara/congress112th/pr-dangling-nodes.gz';
 %default O_PR_GRAPH_NODES_COUNT '/search/nara/congress112th/pr-graph-nodes-count';
 %default O_PR_DANGLING_NODES_COUNT '/search/nara/congress112th/pr-dangling-nodes-count';

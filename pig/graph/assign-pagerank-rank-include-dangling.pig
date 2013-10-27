@@ -14,14 +14,19 @@
  * permissions and limitations under the License.
  */
 
-/* Input: The complete set of nodes with their PR scores
+/* Input: The set of dangling nodes with their adjusted scores
+ * Input: A web graph without timestamp information with each node and its "final" Pagerank
  * Output: The set of all nodes with their PageRank rank and their Pagerank score 
  */
 
-%default I_PR_SCORES_ALL_NODES '/search/nara/congress112th/pr-iterations/pr-id.graph_8.gz';
+%default I_PR_ID_GRAPH_DIR '/search/nara/congress112th/pr-iterations/pr-id.graph_8.gz';
+%default I_PR_DANGLING_NODES_SCORES '/search/nara/congress112th/pr-dangling-nodes-adjusted-scores.gz';
 %default O_PR_RANK_ALL_NODES '/search/nara/congress112th/pr-rank-nodeid-score-all-nodes.gz';
 
-pagerankFromGraph = LOAD '$I_PR_SCORES_ALL_NODES' as (id:chararray, pagerank:double);
-prRanks = RANK pagerankFromGraph by pagerank DESC;
+pagerankFromGraph = LOAD '$I_PR_ID_GRAPH_DIR' as (id:chararray, pagerank:double);
+pagerankFromDangling = LOAD '$I_PR_DANGLING_NODES_SCORES' as (id:chararray, pagerank:double);
+
+pagerankForAllNodes = UNION pagerankFromGraph, pagerankFromDangling;
+prRanks = RANK pagerankForAllNodes by pagerank DESC;
 
 STORE prRanks INTO '$O_PR_RANK_ALL_NODES';

@@ -21,6 +21,6 @@
 %default I_INPUT_DIR '';
 %default O_OUTPUT_DIR '';
 
-Lines = LOAD '$INPUT_DIR' using TextLoader() AS line:chararray;
-STORE Lines into '$OUTPUT_DIR';
+Lines = LOAD '$I_INPUT_DIR' using TextLoader() AS line:chararray;
+STORE Lines into '$O_OUTPUT_DIR';
 
