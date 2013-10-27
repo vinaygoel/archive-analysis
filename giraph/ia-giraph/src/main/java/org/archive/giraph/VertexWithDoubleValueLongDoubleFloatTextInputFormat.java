@@ -94,7 +94,9 @@ public class VertexWithDoubleValueLongDoubleFloatTextInputFormat
       List<Edge<LongWritable, FloatWritable>> edges =
           Lists.newArrayListWithCapacity(tokens.length - 2);
 
-      float weight = 1.0f / (tokens.length - 1);
+      //float weight = 1.0f / (tokens.length - 1);
+      //give each edge the weight of the source vertex
+      float weight = (float)vertexWeight;
       for (int n = 2; n < tokens.length; n++) {
         edges.add(EdgeFactory.create(
             new LongWritable(Long.parseLong(tokens[n])),

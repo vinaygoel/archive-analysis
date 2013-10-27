@@ -1,0 +1,16 @@
+org/archive/giraph/PageRank$PageRankWorkerContext.class
+org/archive/giraph/PageRank$PageRankMasterCompute.class
+org/archive/giraph/VertexWithDoubleValueLongDoubleFloatTextInputFormat.class
+org/archive/giraph/LongDoubleFloatTextInputFormat.class
+org/archive/giraph/VertexWithTextValueLongTextTextTextInputFormat.class
+org/archive/giraph/LongDoubleFloatTextInputFormat$LongDoubleFloatDoubleVertexReader.class
+org/archive/giraph/OutDegreeCountVertex.class
+org/archive/giraph/InDegreeCountVertex.class
+org/archive/giraph/PageRank.class
+org/archive/giraph/LabelPath.class
+org/archive/giraph/OutDegreeCountVertexWithTextValue.class
+org/archive/giraph/VertexWithTextValueLongTextTextTextInputFormat$LongTextTextTextVertexReader.class
+org/archive/giraph/ShortestLabelPath.class
+org/archive/giraph/Algorithm.class
+org/archive/giraph/VertexWithDoubleValueLongDoubleFloatTextInputFormat$LongDoubleFloatDoubleVertexReader.class
+org/archive/giraph/InDegreeCountVertexWithTextValue.class
