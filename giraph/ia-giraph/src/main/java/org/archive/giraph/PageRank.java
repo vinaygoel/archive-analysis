@@ -51,6 +51,8 @@ public class PageRank extends
   /** Sum aggregator names */
   private static String DANGLING_SUM_AGG = "danglingsum";
   private static String NUMVERTICES_SUM_AGG = "numvertices";
+  /** Jump probability */
+  public static final float JUMP_PROBABILITY = 0.15f;
 
   public void compute(Iterable<DoubleWritable> messages) {
     if (getSuperstep() >= 1) {
@@ -61,7 +63,7 @@ public class PageRank extends
       }
       // add in the dangling factor
       sum+=this.<DoubleWritable>getAggregatedValue(DANGLING_SUM_AGG).get();
-      DoubleWritable vertexValue = new DoubleWritable(0.15f + 0.85f * sum);
+      DoubleWritable vertexValue = new DoubleWritable(JUMP_PROBABILITY + (1-JUMP_PROBABILITY) * sum);
       setValue(vertexValue);
       aggregate(NUMVERTICES_SUM_AGG, new LongWritable(1));
     }
