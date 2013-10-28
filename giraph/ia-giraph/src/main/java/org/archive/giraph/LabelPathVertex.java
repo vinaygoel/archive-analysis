@@ -38,6 +38,7 @@ public class LabelPathVertex extends
   /** The  paths id */
   public static final LongConfOption SOURCE_ID =
       new LongConfOption("LabelPathVertex.sourceId", 1);
+
   /** Class logger */
   private static final Logger LOG =
       Logger.getLogger(LabelPathVertex.class);
