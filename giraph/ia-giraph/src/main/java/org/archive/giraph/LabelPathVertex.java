@@ -75,7 +75,7 @@ public class LabelPathVertex extends
     
     //only proceed if the vertex value has to be assigned a valid path, else just vote to halt
     if(getSuperstep() < MAX_SUPERSTEPS && currentVertexValueString.equals(MAXHOPPATH)) {
-       String minHopPath = isSource() ? HOP + "0:CRAWLER" : MAXHOPPATH;
+       String minHopPath = isSource() ? HOP + "1:CRAWLER" : MAXHOPPATH;
        int minDist = isSource() ? 1 : findNumberOfOccurrences(MAXHOPPATH,HOP);
 
        //pick the shortest label

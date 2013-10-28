@@ -24,8 +24,8 @@
 %default N '50';
 %default I_STOP_WORDS_FILE 'stop-words.txt';
 
-%default I_LINKS_DATA_DIR '/search/nara/congress112th/crawled-canon-links-from-wats.gz/';
-%default O_ANCHOR_TOPN_TFIDF_DIR '/search/nara/congress112th/anchor-top-tfidf.gz/';
+%default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-wats-only-crawled-resources.gz/';
+%default O_ANCHORTEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topanchortext.gz/';
 
 import 'tfidf.macro';
 import 'topN.macro';
@@ -59,5 +59,5 @@ tfIdfScores = FOREACH tfIdfScores GENERATE doc, term, (double)tfidf as tfidf;
 -- Use TOP_N macro to get Top N TF-IDF terms per Doc, returns doc, bag of (term,score) tuples
 TopNTfIdfScores = TOP_N(tfIdfScores,'doc','term','tfidf',$N);
 
-STORE TopNTfIdfScores into '$O_ANCHOR_TOPN_TFIDF_DIR'; 
+STORE TopNTfIdfScores into '$O_ANCHORTEXT_TOPTERMS_DIR'; 
 

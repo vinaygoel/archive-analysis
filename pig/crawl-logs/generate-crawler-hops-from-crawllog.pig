@@ -15,20 +15,31 @@
  */
 
 /* Input: Heritrix generated Crawl Logs
- * Output: A mapping of the crawled URLs to unique integers IDs (crawl.id.map)
+ * Output: A mapping of the crawled URLs to unique integers IDs (crawl.log.id.map)
  * Output: A hop path file (src, -, set of destinations with the hop path type)
+ * Output: Links dataset (source, timestamp, destination) - the links followed by the crawler
  */
 
-%default I_CRAWLLOG_DATA_DIR '/user/vinay/input/test.crawl.log';
-%default O_CRAWL_ID_MAP_DIR '/user/vinay/input/crawl.id.map.gz';
-%default O_CRAWL_ID_HOPPATH_DIR '/user/vinay/input/crawl.id.hoppath';
+%default I_CRAWL_LOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
+%default O_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawl.log.id.map';
+%default O_CRAWL_LOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawl.log.id.onehop';
+%default O_CRAWL_LOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawl.log.gz';
 
+--CDH4
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+
+--CDH3
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+
+REGISTER lib/pigtools.jar;
 REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
 
-log = LOAD '$I_CRAWLLOG_DATA_DIR' USING PigStorage() AS (line:chararray);
+DEFINE SURTURL pigtools.SurtUrlKey();
 
-log = FOREACH log GENERATE STRSPLIT(line,'\\s+') as cols;
-log = FOREACH log GENERATE (chararray)cols.$0 as timestamp, 
+Log = LOAD '$I_CRAWL_LOG_DATA_DIR' USING PigStorage() AS (line:chararray);
+
+Log = FOREACH Log GENERATE STRSPLIT(line,'\\s+') as cols;
+Log = FOREACH Log GENERATE (chararray)cols.$0 as timestamp, 
                            (chararray)cols.$1 as status,
                            (chararray)cols.$2 as bytes,
                            (chararray)cols.$3 as url,
@@ -41,12 +52,19 @@ log = FOREACH log GENERATE (chararray)cols.$0 as timestamp,
                            (chararray)cols.$10 as source,
                            (chararray)cols.$11 as annotations;
 
-log = FOREACH log GENERATE (via == '-' ? '!CRAWLER!' : via) as src, url as dst, (SUBSTRING(path,((int)SIZE(path)-1),((int)SIZE(path)))) as hop;
-log = DISTINCT log;
+-- Store links data (can be combined with links from WAT files)
+Links = FILTER Log BY via != '-';
+Links = FOREACH Links GENERATE SURTURL(via) as src, ToDate(timestamp) as timestamp, SURTURL(url) as dst;
+Links = FILTER Links by src is not null and dst is not null;
+Links = FILTER Links by src!=dst;
+Links = DISTINCT Links;
 
---crawl.id.map
-sources = FOREACH log GENERATE src as url;
-destinations = FOREACH log GENERATE dst as url;
+Log = FOREACH Log GENERATE (via == '-' ? '!CRAWLER!' : via) as src, url as dst, (SUBSTRING(path,((int)SIZE(path)-1),((int)SIZE(path)))) as hop;
+Log = DISTINCT Log;
+
+--crawl.log.id.map
+sources = FOREACH Log GENERATE src as url;
+destinations = FOREACH Log GENERATE dst as url;
 allResources = UNION sources, destinations;
 allResources = DISTINCT allResources;
 
@@ -54,8 +72,8 @@ crawlIdMap = RANK allResources BY url;
 crawlIdMap = FOREACH crawlIdMap GENERATE $0 as id, $1 as url;
 
 -- join with log data
-srcIdResolvedLog = JOIN crawlIdMap BY url, log BY src;
-srcIdResolvedLog = FOREACH srcIdResolvedLog GENERATE crawlIdMap::id as srcId, log::dst as dst, log::hop as hop;
+srcIdResolvedLog = JOIN crawlIdMap BY url, Log BY src;
+srcIdResolvedLog = FOREACH srcIdResolvedLog GENERATE crawlIdMap::id as srcId, Log::dst as dst, Log::hop as hop;
 
 idLog = JOIN crawlIdMap BY url, srcIdResolvedLog BY dst;
 idLog = FOREACH idLog GENERATE srcIdResolvedLog::srcId, crawlIdMap::id as dstId:chararray, srcIdResolvedLog::hop as hop;
@@ -68,5 +86,6 @@ idLogBySrc = FOREACH idLogBySrc {
 		GENERATE group, '-' as misc, COLLECTBAGELEMENTS.collectBagElements(idLog.dstData); 
 	};
 
-STORE crawlIdMap into '$O_CRAWL_ID_MAP_DIR';
-STORE idLogBySrc into '$O_CRAWL_ID_HOPPATH_DIR';
+STORE crawlIdMap into '$O_CRAWL_LOG_ID_MAP_DIR';
+STORE idLogBySrc into '$O_CRAWL_LOG_ID_ONEHOP_DIR'; 
+STORE Links into '$O_CRAWL_LOG_LINKS_DATA_DIR';

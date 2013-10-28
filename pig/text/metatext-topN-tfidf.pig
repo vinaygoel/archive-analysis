@@ -24,8 +24,8 @@
 %default N '50';
 %default I_STOP_WORDS_FILE 'stop-words.txt';
 
-%default I_META_TEXT_DIR '/search/nara/congress112th/meta-text-from-wats.gz/';
-%default O_META_TEXT_TOPN_TFIDF_DIR '/search/nara/congress112th/meta-text-top-tfidf.gz/';
+%default I_METATEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
+%default O_METATEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topmetatext.gz/';
 
 import 'tfidf.macro';
 import 'topN.macro';
@@ -36,7 +36,7 @@ REGISTER lib/removePunctuation.py using jython as PUNCTUATION;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
-Lines = LOAD '$I_META_TEXT_DIR' as (src:chararray, timestamp:chararray, metatext:chararray);
+Lines = LOAD '$I_METATEXT_DIR' as (src:chararray, timestamp:chararray, metatext:chararray);
 Lines = FILTER Lines BY metatext != '';
 Lines = DISTINCT Lines;
 
@@ -58,5 +58,5 @@ tfIdfScores = FOREACH tfIdfScores GENERATE doc, term, (double)tfidf as tfidf;
 -- Use TOP_N macro to get Top N TF-IDF terms per Doc, returns doc, bag of (term,score) tuples
 TopNTfIdfScores = TOP_N(tfIdfScores,'doc','term','tfidf',$N);
 
-STORE TopNTfIdfScores into '$O_META_TEXT_TOPN_TFIDF_DIR'; 
+STORE TopNTfIdfScores into '$O_METATEXT_TOPTERMS_DIR'; 
 

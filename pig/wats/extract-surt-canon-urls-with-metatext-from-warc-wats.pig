@@ -19,7 +19,7 @@
  */
 
 %default I_WATS_DIR '/search/nara/congress112th/wats/';
-%default O_META_TEXT_DIR '/search/nara/congress112th/meta-text-from-wats.gz/';
+%default O_META_TEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
 
 SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
@@ -38,13 +38,18 @@ DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 -- load data from I_WATS_DIR:
-Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.WARC-Header-Metadata.WARC-Target-URI','Envelope.WARC-Header-Metadata.WARC-Date','Envelope.Payload-Metadata.HTTP-Response-Metadata.Response-Message.Status','Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Title','Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.@Metas.{content,name}') AS (src:chararray,timestamp:chararray,status:chararray,title:chararray,metacontent:chararray, metaname:chararray);
+Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.WARC-Header-Metadata.WARC-Target-URI',
+									 'Envelope.WARC-Header-Metadata.WARC-Date',
+									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.Response-Message.Status',
+									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Title',
+									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.@Metas.{content,name}')
+									 AS (src:chararray,timestamp:chararray,status:chararray,title:chararray,metacontent:chararray, metaname:chararray);
 
 -- get meta text only from HTTP 200 response pages
 Orig = FILTER Orig by status == '200';
 
 -- SURT canonicalize the source URL
-Orig = FOREACH Orig GENERATE SURTURL(src) as src, timestamp, title, metacontent, metaname;
+Orig = FOREACH Orig GENERATE SURTURL(src) as src, ToDate(timestamp) as timestamp, title, metacontent, metaname;
 
 MetaLines = FOREACH Orig GENERATE src, timestamp, metacontent, metaname;
 MetaLines = FILTER MetaLines BY metacontent != '' AND metaname != '';
