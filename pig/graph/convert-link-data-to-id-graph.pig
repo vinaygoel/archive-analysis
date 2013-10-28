@@ -19,9 +19,10 @@
  * Output: id.graph data - srcid, timestamp, {set of destination ids} (using the IDs specified by the id.map)  
  */
 
-%default I_LINKS_DATA_DIR '/search/nara/congress112th/crawled-canon-links-from-wats.gz/';
-%default I_ID_MAP_DIR '/search/nara/congress112th/id.map.gz/';
-%default O_ID_GRAPH_DIR '/search/nara/congress112th/id.graph.gz';
+--links from the WATs and (optionally) from the crawl.log data
+%default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-*/';
+%default I_ID_MAP_DIR '/search/nara/congress112th/analysis/id.map';
+%default O_ID_GRAPH_DIR '/search/nara/congress112th/analysis/id.graph';
 
 REGISTER lib/datafu-0.0.10.jar;
 DEFINE MD5 datafu.pig.hash.MD5();

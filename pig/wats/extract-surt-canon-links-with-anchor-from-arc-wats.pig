@@ -19,7 +19,7 @@
  */
 
 %default I_WATS_DIR '/search/nara/congress112th/wats/';
-%default O_LINKS_DATA_DIR '/search/nara/congress112th/canon-links-from-wats.gz/';
+%default O_LINKS_DATA_DIR '/search/nara/congress112th/analysis/canon-wat-links.gz/';
 
 SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
@@ -35,7 +35,11 @@ DEFINE URLRESOLVE org.archive.hadoop.func.URLResolverFunc();
 DEFINE SURTURL pigtools.SurtUrlKey();
 
 -- load data from I_WATS_DIR:
-Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.ARC-Header-Metadata.Target-URI','Envelope.ARC-Header-Metadata.Date','Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Base','Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.@Links.{url,path,text,alt}') as (src:chararray,timestamp:chararray,html_base:chararray,relative:chararray,path:chararray,text:chararray,alt:chararray);
+Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.ARC-Header-Metadata.Target-URI',
+									 'Envelope.ARC-Header-Metadata.Date',
+									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Base',
+									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.@Links.{url,path,text,alt}')
+									 as (src:chararray,timestamp:chararray,html_base:chararray,relative:chararray,path:chararray,text:chararray,alt:chararray);
 
 -- discard lines without links
 LinksOnly = FILTER Orig by relative != '';
@@ -44,8 +48,8 @@ LinksOnly = FILTER Orig by relative != '';
 Links = FOREACH LinksOnly GENERATE src, timestamp, URLRESOLVE(src,html_base,relative) as dst, path, CONCAT(text,alt) as linktext;
 
 -- canonicalize to SURT form
-Links = FOREACH Links GENERATE SURTURL(src) as src, timestamp, SURTURL(dst) as dst, path, linktext;
-Links = FILTER Links by dst is not null;
+Links = FOREACH Links GENERATE SURTURL(src) as src, ToDate(timestamp,'yyyyMMddHHmmss') as timestamp, SURTURL(dst) as dst, path, linktext;
+Links = FILTER Links by src is not null and dst is not null;
 
 -- remove self links
 Links = FILTER Links by src!=dst;

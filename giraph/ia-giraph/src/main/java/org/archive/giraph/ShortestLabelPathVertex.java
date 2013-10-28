@@ -68,7 +68,7 @@ public class ShortestLabelPathVertex extends
       setValue(new Text(MAXHOPPATH));
     }
 
-    String minHopPath = isSource() ? HOP + "0:CRAWLER" : MAXHOPPATH;
+    String minHopPath = isSource() ? HOP + "1:CRAWLER" : MAXHOPPATH;
     int minDist = isSource() ? 1 : findNumberOfOccurrences(MAXHOPPATH,HOP);
 
     for (Text message : messages) {

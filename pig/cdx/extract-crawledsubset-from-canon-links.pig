@@ -19,9 +19,9 @@
  * Output: Canonicalized link data where every dst is in the CDX (i.e. dst has been crawled)
  */
 
-%default I_CANON_LINKS_DATA_DIR '/search/nara/congress112th/canon-links-from-wats.gz/';
+%default I_CANON_LINKS_DATA_DIR '/search/nara/congress112th/analysis/canon-wat-links.gz/';
 %default I_CDX_DIR '/search/nara/congress112th/cdx/';
-%default O_CRAWLED_CANON_LINKS_DATA_DIR '/search/nara/congress112th/crawled-canon-links-from-wats.gz/';
+%default O_CRAWLED_CANON_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-wats-only-crawled-resources.gz';
 
 --CDH4
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;

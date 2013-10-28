@@ -19,20 +19,18 @@
  * Output: Lines containing Outdegree, Indegree and Pagerank ranks for each doc (url)
  */
 
-%default I_ID_MAP_DIR '/search/nara/congress112th/id.map.gz/';
-%default I_OUTDEGREE_DIR '/search/nara/congress112th/degree-analysis.gz/id-numoutlinks.gz/';
-%default I_INDEGREE_DIR '/search/nara/congress112th/degree-analysis.gz/id-numinlinks.gz/';
-%default I_PR_RANK_ALL_NODES '/search/nara/congress112th/pr-rank-nodeid-score-all-nodes.gz';
-%default O_OUTDEGREE_INDEGREE_PR_RANK '/search/nara/congress112th/canonurl-outDegree-inDegree-prRank.gz/';
+%default I_ID_MAP_DIR '/search/nara/congress112th/analysis/id.map/';
+%default I_ID_OUTDEGREE_DIR '/search/nara/congress112th/analysis/id.outdegree/';
+%default I_ID_INDEGREE_DIR '/search/nara/congress112th/analysis/id.indegree/';
+%default I_ID_PRRANK_DIR '/search/nara/congress112th/analysis/id.prrank/';
+%default O_URL_OUTDEGREE_INDEGREE_PRRANK '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
 
 %default PRRANK_FOR_UNKNOWN_PAGE '1000000000';
 
 idMap = LOAD '$I_ID_MAP_DIR' AS (id:chararray, url:chararray);
-outDegrees = LOAD '$I_OUTDEGREE_DIR' as (id:chararray, outDegree:long);
-inDegrees = LOAD '$I_INDEGREE_DIR' as (id:chararray, inDegree:long);
-
---note the change in order of fields
-prRanks = LOAD '$I_PR_RANK_ALL_NODES' as (prRank:long, id:chararray);
+outDegrees = LOAD '$I_ID_OUTDEGREE_DIR' as (id:chararray, outDegree:long);
+inDegrees = LOAD '$I_ID_INDEGREE_DIR' as (id:chararray, inDegree:long);
+prRanks = LOAD '$I_ID_PRRANK_DIR' as (id:chararray, prRank:long);
 
 outIds = FOREACH outDegrees GENERATE id;
 inIds = FOREACH inDegrees GENERATE id;
@@ -55,4 +53,4 @@ outInPrData = FOREACH outInPrData GENERATE outInData::id as id, outInData::outDe
 result = JOIN idMap BY id, outInPrData by id;
 result = FOREACH result GENERATE idMap::url as url, outInPrData::outDegree as outDegree, outInPrData::inDegree as inDegree, outInPrData::prRank as prRank;
 
-STORE result INTO '$O_OUTDEGREE_INDEGREE_PR_RANK';
+STORE result INTO '$O_URL_OUTDEGREE_INDEGREE_PRRANK';

@@ -18,8 +18,9 @@
  * Output: A mapping of the link URLs/IDs to unique integers IDs (id.map)
  */
 
-%default I_LINKS_DATA_DIR '/search/nara/congress112th/crawled-canon-links-from-wats.gz/';
-%default O_ID_MAP_DIR '/search/nara/congress112th/id.map.gz/';
+--links from the WATs and (optionally) from the crawl.log data
+%default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-*/';
+%default O_ID_MAP_DIR '/search/nara/congress112th/analysis/id.map';
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);
 S = FOREACH Links GENERATE src as url;
@@ -28,7 +29,7 @@ A = UNION S, D;
 A = DISTINCT A;
 
 -- assign integer identifiers to sorted URLs (SURT sorted allows for pages belonging to the same host having "closer" IDs)
--- NOTE: RANK does not work in local mode!!
+-- NOTE: RANK does not work in local mode!
 
 Ranked = RANK A by url;
 Store Ranked into '$O_ID_MAP_DIR';
