@@ -15,15 +15,15 @@
  */
 
 /* Input: Heritrix generated Crawl Logs
- * Output: A mapping of the crawled URLs to unique integers IDs (crawl.log.id.map)
+ * Output: A mapping of the crawled URLs to unique integers IDs (crawllogid.map)
  * Output: A hop path file (src, -, set of destinations with the hop path type)
  * Output: Links dataset (source, timestamp, destination) - the links followed by the crawler
  */
 
 %default I_CRAWL_LOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
-%default O_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawl.log.id.map';
-%default O_CRAWL_LOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawl.log.id.onehop';
-%default O_CRAWL_LOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawl.log.gz';
+%default O_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawllogid.map';
+%default O_CRAWL_LOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawllogid.onehop';
+%default O_CRAWL_LOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawllog.gz';
 
 --CDH4
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
@@ -62,7 +62,7 @@ Links = DISTINCT Links;
 Log = FOREACH Log GENERATE (via == '-' ? '!CRAWLER!' : via) as src, url as dst, (SUBSTRING(path,((int)SIZE(path)-1),((int)SIZE(path)))) as hop;
 Log = DISTINCT Log;
 
---crawl.log.id.map
+--crawllogid.map
 sources = FOREACH Log GENERATE src as url;
 destinations = FOREACH Log GENERATE dst as url;
 allResources = UNION sources, destinations;

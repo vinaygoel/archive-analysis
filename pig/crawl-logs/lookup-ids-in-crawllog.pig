@@ -16,13 +16,13 @@
 
 /* Input: The set of IDs to look up in the Heritrix generated Crawl Logs
  * Input: Heritrix generated Crawl Logs
- * Input: A mapping of the crawled URLs to unique integers IDs (crawl.id.map)
+ * Input: A mapping of the crawled URLs to unique integers IDs (crawlid.map)
  * Output: Crawl Log Lines where the URLs/Vias have the given IDs
  */
 
 %default I_CRAWL_LOG_IDS_TO_LOOKUP '/search/nara/congress112th/giraph/ids-to-find';
 %default I_CRAWL_LOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
-%default I_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/giraph/crawl.log.id.map.gz';
+%default I_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/giraph/crawllogid.map';
 %default O_MATCHED_CRAWL_LOG_DATA_DIR '/search/nara/congress112th/giraph/matched-logs';
 
 idsToLookup = LOAD '$I_CRAWL_LOG_IDS_TO_LOOKUP' AS (id:chararray);
