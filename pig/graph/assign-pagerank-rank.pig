@@ -18,11 +18,11 @@
  * Output: The set of all nodes with their PageRank rank and their Pagerank score 
  */
 
-%default I_ID_PRSCORE '/search/nara/congress112th/analysis/id.prscore/';
-%default O_ID_PRRANK '/search/nara/congress112th/analysis/id.prrank/';
+%default I_ID_PRSCORE_DIR '/search/nara/congress112th/analysis/id.prscore/';
+%default O_ID_PRRANK_DIR '/search/nara/congress112th/analysis/id.prrank/';
 
-pagerankFromGraph = LOAD '$I_ID_PRSCORE' as (id:chararray, pagerank:double);
+pagerankFromGraph = LOAD '$I_ID_PRSCORE_DIR' as (id:chararray, pagerank:double);
 prRanks = RANK pagerankFromGraph by pagerank DESC;
 -- id, rank, score
 prRanks = FOREACH prRanks GENERATE $1, $0, $2; 
-STORE prRanks INTO '$O_ID_PRRANK';
+STORE prRanks INTO '$O_ID_PRRANK_DIR';

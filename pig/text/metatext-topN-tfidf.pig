@@ -25,7 +25,7 @@
 %default I_STOP_WORDS_FILE 'stop-words.txt';
 
 %default I_METATEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
-%default O_METATEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topmetatext.gz/';
+%default O_URL_METATEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topmetatext.gz/';
 
 import 'tfidf.macro';
 import 'topN.macro';
@@ -58,5 +58,5 @@ tfIdfScores = FOREACH tfIdfScores GENERATE doc, term, (double)tfidf as tfidf;
 -- Use TOP_N macro to get Top N TF-IDF terms per Doc, returns doc, bag of (term,score) tuples
 TopNTfIdfScores = TOP_N(tfIdfScores,'doc','term','tfidf',$N);
 
-STORE TopNTfIdfScores into '$O_METATEXT_TOPTERMS_DIR'; 
+STORE TopNTfIdfScores into '$O_URL_METATEXT_TOPTERMS_DIR'; 
 

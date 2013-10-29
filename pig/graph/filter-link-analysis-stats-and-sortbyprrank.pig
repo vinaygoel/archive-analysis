@@ -19,15 +19,15 @@
  * Input: Lines containing the found URLs with the Outdegree, Indegree and Pagerank ranks (sorted by rank)
  */
 
-%default I_URL_OUTDEGREE_INDEGREE_PRRANK '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
-%default I_URL_TO_FIND '/search/nara/congress112th/analysis/video-urls/';
-%default O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK '/search/nara/congress112th/analysis/video.url.outdegree-indegree-prrank/';
+%default I_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
+%default I_URL_TO_FIND_DIR '/search/nara/congress112th/analysis/video-urls/';
+%default O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/video.url.outdegree-indegree-prrank/';
 
-LinkStats = LOAD '$I_URL_OUTDEGREE_INDEGREE_PRRANK' AS (url:chararray, outDegree:long, inDegree:long, prRank:long);
-Urls = LOAD '$I_URL_TO_FIND' AS (url:chararray);
+LinkStats = LOAD '$I_URL_OUTDEGREE_INDEGREE_PRRANK_DIR' AS (url:chararray, outDegree:long, inDegree:long, prRank:long);
+Urls = LOAD '$I_URL_TO_FIND_DIR' AS (url:chararray);
 
 Joined = JOIN Urls BY url, LinkStats BY url;
 Joined = FOREACH Joined GENERATE LinkStats::url as url, LinkStats::outDegree as outDegree, LinkStats::inDegree as inDegree, LinkStats::prRank as prRank;
 Sorted = ORDER Joined BY prRank;
 
-STORE Sorted INTO '$O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK';
+STORE Sorted INTO '$O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK_DIR';

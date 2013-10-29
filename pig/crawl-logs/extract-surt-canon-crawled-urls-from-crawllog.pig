@@ -18,7 +18,7 @@
  * Output: SURT-form crawled URLs (extracted from URL field)
  */
 
-%default I_CRAWL_LOG_DATA_DIR '';
+%default I_CRAWLLOG_DATA_DIR '';
 %default O_CRAWLED_URLS_DIR '/search/nara/congress112th/analysis/video-urls/';
 
 --CDH4
@@ -29,7 +29,7 @@ REGISTER lib/pigtools.jar;
 
 DEFINE SURTURL pigtools.SurtUrlKey();
 
-Log = LOAD '$I_CRAWL_LOG_DATA_DIR' USING PigStorage() AS (line:chararray);
+Log = LOAD '$I_CRAWLLOG_DATA_DIR' USING PigStorage() AS (line:chararray);
 Log = FOREACH Log GENERATE STRSPLIT(line,'\\s+') as cols;
 Log = FOREACH Log GENERATE (chararray)cols.$0 as timestamp, 
                            (chararray)cols.$1 as status,

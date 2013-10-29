@@ -20,10 +20,10 @@
  * Output: Links dataset (source, timestamp, destination) - the links followed by the crawler
  */
 
-%default I_CRAWL_LOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
-%default O_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawllogid.map';
-%default O_CRAWL_LOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawllogid.onehop';
-%default O_CRAWL_LOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawllog.gz';
+%default I_CRAWLLOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
+%default O_CRAWLLOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawllogid.map';
+%default O_CRAWLLOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawllogid.onehop';
+%default O_CRAWLLOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawllog.gz';
 
 --CDH4
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
@@ -36,7 +36,7 @@ REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
 
 DEFINE SURTURL pigtools.SurtUrlKey();
 
-Log = LOAD '$I_CRAWL_LOG_DATA_DIR' USING PigStorage() AS (line:chararray);
+Log = LOAD '$I_CRAWLLOG_DATA_DIR' USING PigStorage() AS (line:chararray);
 
 Log = FOREACH Log GENERATE STRSPLIT(line,'\\s+') as cols;
 Log = FOREACH Log GENERATE (chararray)cols.$0 as timestamp, 
@@ -86,6 +86,6 @@ idLogBySrc = FOREACH idLogBySrc {
 		GENERATE group, '-' as misc, COLLECTBAGELEMENTS.collectBagElements(idLog.dstData); 
 	};
 
-STORE crawlIdMap into '$O_CRAWL_LOG_ID_MAP_DIR';
-STORE idLogBySrc into '$O_CRAWL_LOG_ID_ONEHOP_DIR'; 
-STORE Links into '$O_CRAWL_LOG_LINKS_DATA_DIR';
+STORE crawlIdMap into '$O_CRAWLLOG_ID_MAP_DIR';
+STORE idLogBySrc into '$O_CRAWLLOG_ID_ONEHOP_DIR'; 
+STORE Links into '$O_CRAWLLOG_LINKS_DATA_DIR';

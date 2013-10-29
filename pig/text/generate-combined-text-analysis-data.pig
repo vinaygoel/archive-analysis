@@ -16,27 +16,40 @@
 
 /* Input: Lines containing the top N anchor-terms bag for each doc (url)
  * Input: Lines containing the top N metatext-terms bag for each doc (url)
+ * Input: Lines containing the title text for each doc (url)
  * Output: Lines containing the url with the respective anchor-terms bag and metatext-terms bag
  */
 
-%default I_ANCHORTEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topanchortext.gz/';
-%default I_METATEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topmetatext.gz/';
-%default O_URL_ANCHORTEXTTOPTERMS_METATEXTTOPTERMS '/search/nara/congress112th/analysis/url.topanchortext-topmetatext.gz';
+%default I_URL_ANCHORTEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topanchortext.gz/';
+%default I_URL_METATEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topmetatext.gz/';
+%default I_URL_TITLE_DIR '/search/nara/congress112th/analysis/url.title.gz/';
+%default O_URL_TITLE_ANCHORTEXTTOPTERMS_METATEXTTOPTERMS_DIR '/search/nara/congress112th/analysis/url.title-topanchortext-topmetatext.gz';
 
 --can read top terms in as chararray here instead of bag - topTerms:{termWithScores:(term:chararray,score:double)}
-AnchorTopTerms = LOAD '$I_ANCHORTEXT_TOPTERMS_DIR' AS (url:chararray, anchorTerms);
-MetaTopTerms = LOAD '$I_METATEXT_TOPTERMS_DIR' AS (url:chararray, metaTerms);
+AnchorTopTerms = LOAD '$I_URL_ANCHORTEXT_TOPTERMS_DIR' AS (url:chararray, anchorTerms:chararray);
+MetaTopTerms = LOAD '$I_URL_METATEXT_TOPTERMS_DIR' AS (url:chararray, metaTerms:chararray);
+Titles = LOAD '$I_URL_TITLE_DIR' AS (url:chararray, title:chararray);
 
 Urls1 = FOREACH AnchorTopTerms GENERATE url;
 Urls2 = FOREACH MetaTopTerms GENERATE url;
+Urls3 = FOREACH Titles GENERATE url;
 
 AllUrls = UNION Urls1, Urls2;
+AllUrls = UNION AllUrls, Urls3;
 AllUrls = DISTINCT AllUrls;
 
 AnchorData = JOIN AllUrls BY url left, AnchorTopTerms BY url;
 AnchorData = FOREACH AnchorData GENERATE AllUrls::url as url, (AnchorTopTerms::anchorTerms is null?'{}':AnchorTopTerms::anchorTerms) as anchorTerms;
 
 AnchorAndMetaTextData = JOIN AnchorData BY url left, MetaTopTerms BY url;
-AnchorAndMetaTextData = FOREACH AnchorAndMetaTextData GENERATE AnchorData::url as url, AnchorData::anchorTerms as anchorTerms, (MetaTopTerms::metaTerms is null?'{}':MetaTopTerms::metaTerms) as metaTerms;
+AnchorAndMetaTextData = FOREACH AnchorAndMetaTextData GENERATE AnchorData::url as url, 
+							       AnchorData::anchorTerms as anchorTerms, 
+							       (MetaTopTerms::metaTerms is null?'{}':MetaTopTerms::metaTerms) as metaTerms;
 
-STORE AnchorAndMetaTextData INTO '$O_URL_ANCHORTEXTTOPTERMS_METATEXTTOPTERMS';
+TitleWithAnchorAndMetaTextData = JOIN AnchorAndMetaTextData BY url left, Titles BY url;
+TitleWithAnchorAndMetaTextData = FOREACH TitleWithAnchorAndMetaTextData GENERATE AnchorAndMetaTextData::url as url,
+										 (Titles::title is null?'{}':Titles::title) as title,
+										 AnchorAndMetaTextData::anchorTerms as anchorTerms, 
+										 AnchorAndMetaTextData::metaTerms as metaTerms;
+
+STORE TitleWithAnchorAndMetaTextData INTO '$O_URL_TITLE_ANCHORTEXTTOPTERMS_METATEXTTOPTERMS_DIR';

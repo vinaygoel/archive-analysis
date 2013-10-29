@@ -20,14 +20,14 @@
  * Output: Crawl Log Lines where the URLs/Vias have the given IDs
  */
 
-%default I_CRAWL_LOG_IDS_TO_LOOKUP '/search/nara/congress112th/giraph/ids-to-find';
-%default I_CRAWL_LOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
-%default I_CRAWL_LOG_ID_MAP_DIR '/search/nara/congress112th/giraph/crawllogid.map';
-%default O_MATCHED_CRAWL_LOG_DATA_DIR '/search/nara/congress112th/giraph/matched-logs';
+%default I_CRAWLLOG_IDS_TO_LOOKUP_DIR '/search/nara/congress112th/giraph/ids-to-find';
+%default I_CRAWLLOG_DATA_DIR '/user/adam/NARA-112TH-CONGRESS-2012.aggregate.crawl.log';
+%default I_CRAWLLOG_ID_MAP_DIR '/search/nara/congress112th/giraph/crawllogid.map';
+%default O_MATCHED_CRAWLLOG_DATA_DIR '/search/nara/congress112th/giraph/matched-logs';
 
-idsToLookup = LOAD '$I_CRAWL_LOG_IDS_TO_LOOKUP' AS (id:chararray);
+idsToLookup = LOAD '$I_CRAWLLOG_IDS_TO_LOOKUP_DIR' AS (id:chararray);
 
-Log = LOAD '$I_CRAWL_LOG_DATA_DIR' USING PigStorage() AS (line:chararray);
+Log = LOAD '$I_CRAWLLOG_DATA_DIR' USING PigStorage() AS (line:chararray);
 Log = FOREACH Log GENERATE STRSPLIT(line,'\\s+') as cols;
 Log = FOREACH Log GENERATE (chararray)cols.$0 as timestamp, 
                            (chararray)cols.$1 as status,
@@ -42,7 +42,7 @@ Log = FOREACH Log GENERATE (chararray)cols.$0 as timestamp,
                            (chararray)cols.$10 as source,
                            (chararray)cols.$11 as annotations;
 
-idMap = LOAD '$I_CRAWL_LOG_ID_MAP_DIR' AS (id:chararray, url:chararray);
+idMap = LOAD '$I_CRAWLLOG_ID_MAP_DIR' AS (id:chararray, url:chararray);
 
 urlsToLookup = JOIN idsToLookup BY id, idMap BY id;
 urlsToLookup = FOREACH urlsToLookup GENERATE idMap::url as url;
@@ -53,6 +53,6 @@ matchedCrawlLogLinesUrls = FOREACH matchedCrawlLogLinesUrls GENERATE Log::timest
 matchedCrawlLogLinesVias = JOIN urlsToLookup BY url, Log BY via;
 matchedCrawlLogLinesVias = FOREACH matchedCrawlLogLinesVias GENERATE Log::timestamp, Log::status, Log::bytes, Log::url, Log::path, Log::via, Log::type, Log::thread, Log::elapsed, Log::digest, Log::source, Log::annotations;
 
-STORE urlsToLookup into '$O_MATCHED_CRAWL_LOG_DATA_DIR/urls-lookup/';
-STORE matchedCrawlLogLinesUrls into '$O_MATCHED_CRAWL_LOG_DATA_DIR/matched-urls/' using PigStorage(' ');
-STORE matchedCrawlLogLinesVias into '$O_MATCHED_CRAWL_LOG_DATA_DIR/matched-vias/' using PigStorage(' ');
+STORE urlsToLookup into '$O_MATCHED_CRAWLLOG_DATA_DIR/urls-lookup/';
+STORE matchedCrawlLogLinesUrls into '$O_MATCHED_CRAWLLOG_DATA_DIR/matched-urls/' using PigStorage(' ');
+STORE matchedCrawlLogLinesVias into '$O_MATCHED_CRAWLLOG_DATA_DIR/matched-vias/' using PigStorage(' ');

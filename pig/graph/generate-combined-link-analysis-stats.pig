@@ -23,7 +23,7 @@
 %default I_ID_OUTDEGREE_DIR '/search/nara/congress112th/analysis/id.outdegree/';
 %default I_ID_INDEGREE_DIR '/search/nara/congress112th/analysis/id.indegree/';
 %default I_ID_PRRANK_DIR '/search/nara/congress112th/analysis/id.prrank/';
-%default O_URL_OUTDEGREE_INDEGREE_PRRANK '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
+%default O_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
 
 %default PRRANK_FOR_UNKNOWN_PAGE '1000000000';
 
@@ -53,4 +53,4 @@ outInPrData = FOREACH outInPrData GENERATE outInData::id as id, outInData::outDe
 result = JOIN idMap BY id, outInPrData by id;
 result = FOREACH result GENERATE idMap::url as url, outInPrData::outDegree as outDegree, outInPrData::inDegree as inDegree, outInPrData::prRank as prRank;
 
-STORE result INTO '$O_URL_OUTDEGREE_INDEGREE_PRRANK';
+STORE result INTO '$O_URL_OUTDEGREE_INDEGREE_PRRANK_DIR';

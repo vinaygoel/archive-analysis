@@ -14,14 +14,12 @@
  * permissions and limitations under the License. 
  */
 
-/* Input: Canonicalized link data (src,timestamp,dst,path,linktext)
- * Input: CDX (wayback index files for the collection(s))
- * Output: Canonicalized link data where every dst is in the CDX (i.e. dst has been crawled)
+/* Input: CDX (wayback index files for the collection(s))
+ * Output: URLs (SURT) with the provided pattern (see code for the pattern)
  */
 
-%default I_CANON_LINKS_DATA_DIR '/search/nara/congress112th/analysis/canon-wat-links.gz/';
 %default I_CDX_DIR '/search/nara/congress112th/cdx/';
-%default O_CRAWLED_CANON_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-wats-only-crawled-resources.gz';
+%default O_MATCHED_URLS_DIR '/search/nara/congress112th/analysis/youtube-watch-urls';
 
 --CDH4
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
@@ -32,14 +30,10 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/pigtools.jar;
 DEFINE SURTURL pigtools.SurtUrlKey();
 
-Links = LOAD '$I_CANON_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray, path:chararray, linktext:chararray);
 CDXLines = LOAD '$I_CDX_DIR' using PigStorage(' ') AS (curl:chararray, ts:chararray, ourl:chararray);
-
 CrawledUrls = foreach CDXLines GENERATE SURTURL(ourl) as url;
 CrawledUrls = DISTINCT CrawledUrls;
 
---grab only links where dst has been crawled
-CrawledLinks = JOIN Links BY dst, CrawledUrls by url;
-CrawledLinks = FOREACH CrawledLinks GENERATE Links::src, Links::timestamp, Links::dst, Links::path, Links::linktext;
+MatchedUrls = FILTER CrawledUrls BY url matches '^.*youtube.*watch.*';
 
-STORE CrawledLinks into '$O_CRAWLED_CANON_LINKS_DATA_DIR';
+STORE MatchedUrls into '$O_MATCHED_URLS_DIR';

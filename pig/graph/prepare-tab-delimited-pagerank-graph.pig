@@ -20,7 +20,7 @@
 
 
 %default I_ID_GRAPH_DIR '/search/nara/congress112th/analysis/id.graph';
-%default O_PR_TAB_ID_GRAPH_DIR '/search/nara/congress112th/analysis/pr-id.graph';
+%default O_PR_TAB_ID_GRAPH_DIR '/search/nara/congress112th/analysis/pagerankid.graph';
 %default PR_INIT_SCORE '1';
 
 REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;

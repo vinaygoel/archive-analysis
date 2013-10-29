@@ -33,6 +33,7 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/pigtools.jar;
 DEFINE URLRESOLVE org.archive.hadoop.func.URLResolverFunc();
 DEFINE SURTURL pigtools.SurtUrlKey();
+DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 -- load data from I_WATS_DIR:
 Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.ARC-Header-Metadata.Target-URI',
@@ -48,7 +49,7 @@ LinksOnly = FILTER Orig by relative != '';
 Links = FOREACH LinksOnly GENERATE src, timestamp, URLRESOLVE(src,html_base,relative) as dst, path, CONCAT(text,alt) as linktext;
 
 -- canonicalize to SURT form
-Links = FOREACH Links GENERATE SURTURL(src) as src, ToDate(timestamp,'yyyyMMddHHmmss') as timestamp, SURTURL(dst) as dst, path, linktext;
+Links = FOREACH Links GENERATE SURTURL(src) as src, ToDate(timestamp,'yyyyMMddHHmmss') as timestamp, SURTURL(dst) as dst, path, COMPRESSWHITESPACES(linktext) as linktext;
 Links = FILTER Links by src is not null and dst is not null;
 
 -- remove self links
