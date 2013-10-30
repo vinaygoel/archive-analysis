@@ -15,14 +15,14 @@
  */
 
 /* Input: Parsed Text Captures generated from the 'internetarchive/waimea' project
- * Output: Links and Embeds from the parsed captures
+ * Output: Links and Embeds from the parsed captures (source, timestamp, destination, link type(empty string), and anchor text information)
  */
 
 %default I_TIMESTAMP_TO_INSERT '20121211224851';
 %default I_PARSED_DATA_DIR '/search/nara/congress112th/parsed/';
 %default O_LINKS_DATA_DIR '/search/nara/congress112th/analysis/canon-parsed-captures-links.gz/';
 
-SET mapred.job.reuse.jvm.num.tasks 1
+SET mapred.max.map.failures.percent 10;
 SET mapred.reduce.slowstart.completed.maps 0.9
 
 --CDH4
