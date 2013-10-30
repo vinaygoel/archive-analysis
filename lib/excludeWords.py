@@ -1,5 +1,3 @@
-#/usr/bin/python
-
 @outputSchema("text:chararray") 
 def excludeWords(textString,excludeFile):
 	outList = []
