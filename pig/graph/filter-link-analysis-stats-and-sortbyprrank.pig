@@ -20,14 +20,25 @@
  */
 
 %default I_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/url.outdegree-indegree-prrank';
-%default I_URL_TO_FIND_DIR '/search/nara/congress112th/analysis/video-urls/';
-%default O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/video.url.outdegree-indegree-prrank/';
+%default I_ORIGURL_TO_FIND_DIR '/search/nara/congress112th/analysis/video-urls/';
+%default O_FILTERED_ORIGURL_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/video.url.outdegree-indegree-prrank/';
+
+--CDH4
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+
+--CDH3
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+
+REGISTER lib/pigtools.jar;
+DEFINE SURTURL pigtools.SurtUrlKey();
 
 LinkStats = LOAD '$I_URL_OUTDEGREE_INDEGREE_PRRANK_DIR' AS (url:chararray, outDegree:long, inDegree:long, prRank:long);
-Urls = LOAD '$I_URL_TO_FIND_DIR' AS (url:chararray);
+Urls = LOAD '$I_ORIGURL_TO_FIND_DIR' AS (origurl:chararray);
+Urls = FOREACH Urls GENERATE SURTURL(origurl) as url;
+Urls = DISTINCT Urls;
 
 Joined = JOIN Urls BY url, LinkStats BY url;
-Joined = FOREACH Joined GENERATE LinkStats::url as url, LinkStats::outDegree as outDegree, LinkStats::inDegree as inDegree, LinkStats::prRank as prRank;
+Joined = FOREACH Joined GENERATE Urls::origurl as origurl, LinkStats::url as url, LinkStats::outDegree as outDegree, LinkStats::inDegree as inDegree, LinkStats::prRank as prRank;
 Sorted = ORDER Joined BY prRank;
 
-STORE Sorted INTO '$O_FILTERED_URL_OUTDEGREE_INDEGREE_PRRANK_DIR';
+STORE Sorted INTO '$O_FILTERED_ORIGURL_URL_OUTDEGREE_INDEGREE_PRRANK_DIR';

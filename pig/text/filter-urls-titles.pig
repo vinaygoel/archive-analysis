@@ -15,16 +15,17 @@
  */
 
 /* Input: Lines containing the URLs and titles
- * Input: Lines containing the URLs to find in the titles dataset
- * Input: Lines containing the found URLs with the titles
+ * Input: Lines containing the SURT and original forms of the URL to find in the titles dataset
+ * Input: Lines containing the original URLs with the titles
  */
 
 %default I_URL_TITLE_DIR '/search/nara/congress112th/analysis/url.title.gz';
-%default I_URL_TO_FIND_DIR '/search/nara/congress112th/analysis/youtube-watch-urls/';
-%default O_FILTERED_URL_TITLE_DIR '/search/nara/congress112th/analysis/youtube-watch.url.title.gz'
+%default I_URL_ORIGURL_TO_FIND_DIR '/search/nara/congress112th/analysis/youtube-watch-url-origurl/';
+%default O_FILTERED_ORIGURL_TITLE_DIR '/search/nara/congress112th/analysis/youtube-watch.origurl.title.gz'
 
 TitleLines = LOAD '$I_URL_TITLE_DIR' AS (url:chararray, title:chararray);
-Urls = LOAD '$I_URL_TO_FIND_DIR' AS (url:chararray);
+Urls = LOAD '$I_URL_ORIGURL_TO_FIND_DIR' AS (url:chararray, origurl:chararray);
+
 Joined = JOIN Urls BY url, TitleLines BY url;
-Joined = FOREACH Joined GENERATE TitleLines::url as url, TitleLines::title as title;
-STORE Joined INTO '$O_FILTERED_URL_TITLE_DIR';
+Joined = FOREACH Joined GENERATE Urls::origurl as origurl, TitleLines::title as title;
+STORE Joined INTO '$O_FILTERED_ORIGURL_TITLE_DIR';

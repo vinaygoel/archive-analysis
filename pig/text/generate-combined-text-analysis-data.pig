@@ -48,7 +48,7 @@ AnchorAndMetaTextData = FOREACH AnchorAndMetaTextData GENERATE AnchorData::url a
 
 TitleWithAnchorAndMetaTextData = JOIN AnchorAndMetaTextData BY url left, Titles BY url;
 TitleWithAnchorAndMetaTextData = FOREACH TitleWithAnchorAndMetaTextData GENERATE AnchorAndMetaTextData::url as url,
-										 (Titles::title is null?'{}':Titles::title) as title,
+										 (Titles::title is null?'':Titles::title) as title,
 										 AnchorAndMetaTextData::anchorTerms as anchorTerms, 
 										 AnchorAndMetaTextData::metaTerms as metaTerms;
 

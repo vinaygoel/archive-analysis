@@ -15,11 +15,11 @@
  */
 
 /* Input: CDX (wayback index files for the collection(s))
- * Output: URLs (SURT) with the provided pattern (see code for the pattern)
+ * Output: URLs (SURT and Original) with the provided pattern (see code for the pattern)
  */
 
 %default I_CDX_DIR '/search/nara/congress112th/cdx/';
-%default O_MATCHED_URLS_DIR '/search/nara/congress112th/analysis/youtube-watch-urls';
+%default O_MATCHED_URLS_DIR '/search/nara/congress112th/analysis/youtube-watch-url-origurl';
 
 --CDH4
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
@@ -30,10 +30,15 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/pigtools.jar;
 DEFINE SURTURL pigtools.SurtUrlKey();
 
-CDXLines = LOAD '$I_CDX_DIR' using PigStorage(' ') AS (curl:chararray, ts:chararray, ourl:chararray);
-CrawledUrls = foreach CDXLines GENERATE SURTURL(ourl) as url;
-CrawledUrls = DISTINCT CrawledUrls;
+CDXLines = LOAD '$I_CDX_DIR' using PigStorage(' ') AS (curl:chararray, ts:chararray, origurl:chararray);
+CrawledUrls = foreach CDXLines GENERATE SURTURL(origurl) as url, origurl;
+
+--to generate 1-1 mapping
+CrawledUrlsGrp = GROUP CrawledUrls BY url;
+CrawledUrlsGrp = FOREACH CrawledUrlsGrp {
+			Parts = LIMIT CrawledUrls 1;
+			GENERATE group as url, FLATTEN(Parts.origurl) as origurl;
+		};
 
 MatchedUrls = FILTER CrawledUrls BY url matches '^.*youtube.*watch.*';
-
 STORE MatchedUrls into '$O_MATCHED_URLS_DIR';
