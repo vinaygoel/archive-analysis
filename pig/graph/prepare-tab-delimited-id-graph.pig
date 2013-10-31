@@ -21,8 +21,6 @@
 %default I_ID_GRAPH_DIR '/search/nara/congress112th/id.graph.gz';
 %default O_TAB_ID_GRAPH_DIR '/search/nara/congress112th/tab-id.graph.gz';
 
-REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
-
 Graph = LOAD '$I_ID_GRAPH_DIR' as (src:chararray, timestamp:chararray, dests:{d:(dst:chararray)});
 
 Links = foreach Graph generate src, FLATTEN(dests) as dst;
@@ -31,5 +29,5 @@ Links = DISTINCT Links;
 GraphWithoutTimestamps = GROUP Links by src;
 Graph = FOREACH GraphWithoutTimestamps GENERATE group as src, Links.dst as dests;
 
-TabGraph = FOREACH Graph GENERATE src, COLLECTBAGELEMENTS.collectBagElements(dests) as destString;
+TabGraph = FOREACH Graph GENERATE src, BagToString(dests,'\t') as destString;
 Store TabGraph into '$O_TAB_ID_GRAPH_DIR';

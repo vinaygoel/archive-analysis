@@ -32,7 +32,6 @@
 REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
 REGISTER lib/pigtools.jar;
-REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
 
 DEFINE SURTURL pigtools.SurtUrlKey();
 
@@ -83,7 +82,7 @@ idLog = FOREACH idLog GENERATE srcId, ((chararray)CONCAT(dstIdPrefix,hop)) as ds
 
 idLogBySrc = GROUP idLog BY srcId;
 idLogBySrc = FOREACH idLogBySrc {
-		GENERATE group, '-' as misc, COLLECTBAGELEMENTS.collectBagElements(idLog.dstData); 
+		GENERATE group, '-' as misc, BagToString(idLog.dstData,'\t');  
 	};
 
 STORE crawlIdMap into '$O_CRAWLLOG_ID_MAP_DIR';

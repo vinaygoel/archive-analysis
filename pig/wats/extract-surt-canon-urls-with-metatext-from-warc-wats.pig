@@ -19,7 +19,7 @@
  */
 
 %default I_WATS_DIR '/search/nara/congress112th/wats/';
-%default O_META_TEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
+%default O_METATEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
 
 SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
@@ -67,4 +67,4 @@ AllLines = FILTER AllLines BY metatext != '';
 AllLines = FOREACH AllLines GENERATE src, timestamp, COMPRESSWHITESPACES(metatext) as metatext;
 AllLines = DISTINCT AllLines;
 
-STORE AllLines into '$O_META_TEXT_DIR';
+STORE AllLines into '$O_METATEXT_DIR';

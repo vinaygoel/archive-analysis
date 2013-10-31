@@ -15,11 +15,11 @@
  */
 
 /* Input: Parsed Text Captures generated from the 'internetarchive/waimea' project
- * Output: Links and Embeds from the parsed captures (source, timestamp, destination, link type set to empty string, and anchor text information)
+ * Output: Source URL (SURT), timestamp, metatext (from title/description/keywords)
  */
 
 %default I_PARSED_DATA_DIR '/search/nara/congress112th/parsed/';
-%default O_LINKS_DATA_DIR '/search/nara/congress112th/analysis/canon-parsed-captures-links.gz/';
+%default O_METATEXT_DATA_DIR '/search/nara/congress112th/analysis/metatext-from-parsed-captures.gz/';
 
 SET mapred.max.map.failures.percent 10;
 SET mapred.reduce.slowstart.completed.maps 0.9
@@ -53,28 +53,33 @@ Meta = FOREACH Meta GENERATE FROMJSON(value) AS m:[];
 Meta = FILTER Meta BY m#'errorMessage' is null;
 
 -- Only retain the fields of interest.
-Meta = FOREACH Meta GENERATE m#'url'          AS src:chararray,
-			     m#'date'         AS timestamp:chararray,
-                             m#'outlinks'     AS links:{tuple(link:[])};
+Meta = FOREACH Meta GENERATE m#'url'           AS src:chararray,
+			     m#'date'          AS timestamp:chararray,
+			     m#'code'          AS code:chararray,
+			     m#'title'         AS title:chararray,
+			     m#'description'   AS description:chararray,
+			     m#'keywords'      AS keywords:chararray;
 
-Links = FOREACH Meta { 
-         LinkData = FOREACH links GENERATE link#'url' AS dst:chararray, link#'text' AS linktext:chararray;
-         LinkData = FILTER LinkData BY dst != '';
-         LinkData = DISTINCT LinkData;
-         GENERATE src, timestamp, FLATTEN(LinkData) as (dst, linktext);
-       }
+-- get meta text only from HTTP 200 response pages
+Meta = FILTER Meta BY code == '200';
 
--- canonicalize to SURT form
-Links = FOREACH Links GENERATE SURTURL(src) as src, 
-			       ToDate(timestamp,'yyyyMMddHHmmss') as timestamp, 
-			       SURTURL(dst) as dst, 
-			       '' as path, -- since missing
-			       COMPRESSWHITESPACES(linktext) as linktext;
+-- canonicalize the URL
+Meta = FOREACH Meta GENERATE SURTURL(src) as src, 
+			     ToDate(timestamp,'yyyyMMddHHmmss') as timestamp,
+			     (title is null?'':title) as title,
+			     (description is null?'':description) as description,
+			     (keywords is null?'':keywords) as keywords;
 
-Links = FILTER Links by src is not null and dst is not null;
+Meta = FOREACH Meta GENERATE src,
+			     timestamp,
+			     BagToString(TOBAG(title,description,keywords), ' ') as metatext;
 
--- remove self links
-Links = FILTER Links by src!=dst;
-Links = DISTINCT Links;
+Meta = FILTER Meta BY metatext is not null;
 
-STORE Links INTO '$O_LINKS_DATA_DIR';
+Meta = FOREACH Meta GENERATE src, 
+			     timestamp,
+			     COMPRESSWHITESPACES(metatext) as metatext;
+
+Meta = FILTER Meta BY metatext != '' AND metatext != ' ';
+
+Store Meta into '$O_METATEXT_DATA_DIR';

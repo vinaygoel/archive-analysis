@@ -4,4 +4,3 @@ def collectBagElements(bag):
 	for word in bag:
 		elements.append(str(word[0]))
 	return '\t'.join(elements)
-

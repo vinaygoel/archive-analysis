@@ -37,7 +37,7 @@ DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 Lines = LOAD '$I_METATEXT_DIR' as (src:chararray, timestamp:chararray, metatext:chararray);
-Lines = FILTER Lines BY metatext != '';
+Lines = FILTER Lines BY metatext is not null AND metatext != '';
 Lines = DISTINCT Lines;
 
 -- Extract records and fields of interest

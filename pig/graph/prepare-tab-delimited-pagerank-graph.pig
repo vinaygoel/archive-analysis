@@ -23,12 +23,10 @@
 %default O_PR_TAB_ID_GRAPH_DIR '/search/nara/congress112th/analysis/pagerankid.graph';
 %default PR_INIT_SCORE '1';
 
-REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
-
 Graph = LOAD '$I_ID_GRAPH_DIR' as (src:chararray, timestamp:chararray, dests:{d:(dst:chararray)});
 Links = foreach Graph generate src, FLATTEN(dests) as dst;
 Links = DISTINCT Links;
 GraphWithoutTimestamps = GROUP Links by src;
 Graph = FOREACH GraphWithoutTimestamps GENERATE group as src, Links.dst as dests;
-PRIDGraph = FOREACH Graph GENERATE src, $PR_INIT_SCORE as pagerank, COLLECTBAGELEMENTS.collectBagElements(dests) as destString;
+PRIDGraph = FOREACH Graph GENERATE src, $PR_INIT_SCORE as pagerank, BagToString(dests,'\t') as destString;
 STORE PRIDGraph into '$O_PR_TAB_ID_GRAPH_DIR';

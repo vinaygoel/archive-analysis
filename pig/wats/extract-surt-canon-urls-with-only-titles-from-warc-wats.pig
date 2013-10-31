@@ -14,7 +14,7 @@
  * permissions and limitations under the License. 
  */
 
-/* Input: WAT files generated from ARC files
+/* Input: WAT files generated from WARC files
  * Output: Source URL (SURT), title text
  */
 
@@ -37,8 +37,8 @@ DEFINE SURTURL pigtools.SurtUrlKey();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 -- load data from I_WATS_DIR:
-Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.ARC-Header-Metadata.Target-URI',
-									 'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Title')
+Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.WARC-Header-Metadata.WARC-Target-URI',
+                                                                         'Envelope.Payload-Metadata.HTTP-Response-Metadata.HTML-Metadata.Head.Title')
 									 AS (src:chararray,title:chararray);
 
 -- SURT canonicalize the source URL
@@ -48,9 +48,9 @@ Orig = FOREACH Orig GENERATE src, COMPRESSWHITESPACES(title) as title;
 
 TitleLines = GROUP Orig BY src;
 TitleLines = FOREACH TitleLines {
-			titles = Orig.title;
-			titles = LIMIT titles 1;
-			GENERATE group as url, FLATTEN(titles) as title;
+			Titles = Orig.title;
+			Titles = LIMIT Titles 1;
+			GENERATE group as url, FLATTEN(Titles) as title;
 	     };
 
 STORE TitleLines into '$O_URL_TITLE_DIR';

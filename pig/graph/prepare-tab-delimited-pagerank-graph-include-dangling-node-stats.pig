@@ -35,8 +35,6 @@
 %default O_PR_DANGLING_NODES_COUNT '/search/nara/congress112th/pr-dangling-nodes-count';
 %default O_PR_DANGLING_NODES_FACTOR '/search/nara/congress112th/pr-dangling-nodes-factor';
 
-REGISTER lib/collectBagElements.py using jython as COLLECTBAGELEMENTS;
-
 Graph = LOAD '$I_ID_GRAPH_DIR' as (src:chararray, timestamp:chararray, dests:{d:(dst:chararray)});
 DanglingDummy = LOAD '$I_DUMMY_FILE' as (url: chararray);
 
@@ -64,7 +62,7 @@ GraphNodesCount = FOREACH GraphNodesCount GENERATE COUNT($1);
 
 -- NOTE: setting initial PR value to 1. This also means that DanglingNodesCount = DanglingNodesFactor
 DanglingNodes = FOREACH DanglingNodes GENERATE dst, 1 as pagerank;
-PRIDGraph = FOREACH Graph GENERATE src, 1 as pagerank, COLLECTBAGELEMENTS.collectBagElements(dests) as destString;
+PRIDGraph = FOREACH Graph GENERATE src, 1 as pagerank, BagToString(dests,'\t') as destString;
 
 STORE PRIDGraph into '$O_PR_TAB_ID_GRAPH_DIR';
 STORE DanglingNodes into '$O_PR_DANGLING_NODES';

@@ -37,7 +37,7 @@ DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray, path:chararray, linktext:chararray);
-Links = FILTER Links BY linktext != '';
+Links = FILTER Links BY linktext is not null and linktext != '';
 Links = DISTINCT Links;
 
 -- Extract records and fields of interest
