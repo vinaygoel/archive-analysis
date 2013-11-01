@@ -34,7 +34,6 @@ REGISTER lib/pigtools.jar;
 REGISTER lib/bacon.jar
 REGISTER lib/json.jar
 
-DEFINE URLRESOLVE org.archive.hadoop.func.URLResolverFunc();
 DEFINE SURTURL pigtools.SurtUrlKey();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 

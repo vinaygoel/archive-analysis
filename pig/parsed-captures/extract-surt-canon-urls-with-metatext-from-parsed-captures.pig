@@ -34,12 +34,10 @@ REGISTER lib/pigtools.jar;
 REGISTER lib/bacon.jar
 REGISTER lib/json.jar
 
-DEFINE URLRESOLVE org.archive.hadoop.func.URLResolverFunc();
 DEFINE SURTURL pigtools.SurtUrlKey();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
 DEFINE FROMJSON org.archive.bacon.FromJSON();
-DEFINE TOJSON   org.archive.bacon.ToJSON();
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
 Meta  = LOAD '$I_PARSED_DATA_DIR' USING org.archive.bacon.io.SequenceFileLoader() AS (key:chararray, value:chararray);
