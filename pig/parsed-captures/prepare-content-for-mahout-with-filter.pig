@@ -15,11 +15,15 @@
  */
 
 /* Input: Parsed Text Captures generated from the 'internetarchive/waimea' project
- * Output: Sequence files containing the (host + md5 of url) label and content field (to be used to generate document vectors in Mahout)
+ * Output: Sequence files containing the source URL (SURT) and the content field (to be used to generate document vectors in Mahout)
  */
 
+--grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes
+
 %default I_PARSED_DATA_DIR '/search/nara/congress112th/parsed/';
-%default O_URL_CONTENT_SEQ_DIR '/search/nara/congress112th/analysis/parsed-captures-hostlabel.content.seq/';
+%default O_URL_CONTENT_SEQ_DIR '/search/nara/congress112th/analysis/parsed-captures-senategovurls.content.seq/';
+%default I_URL_PREFIX_FILTER '^gov,senate,.*$';
+%default I_STOP_WORDS_FILE 'stop-words.txt';
 
 SET mapred.max.map.failures.percent 10;
 SET mapred.reduce.slowstart.completed.maps 0.9
@@ -30,18 +34,19 @@ SET mapred.reduce.slowstart.completed.maps 0.9
 --CDH3
 REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/pigtools.jar;
+REGISTER lib/tutorial.jar;
 REGISTER lib/json-simple-1.1.1.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
 REGISTER lib/elephant-bird-pig-4.1.jar;
 REGISTER lib/piggybank-0.10.jar;
-REGISTER lib/datafu-0.0.10.jar;
+REGISTER lib/tokenize.py using jython as TOKENIZE;
 
+DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
+DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 DEFINE FROMJSON com.twitter.elephantbird.pig.piggybank.JsonStringToMap();
 DEFINE SequenceFileLoader org.apache.pig.piggybank.storage.SequenceFileLoader();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
 DEFINE SURTURL pigtools.SurtUrlKey();
-DEFINE HOSTNAMEKEY pigtools.ExtractHostNameFromCanonUrlUDF();
-DEFINE MD5 datafu.pig.hash.MD5();
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
 Meta  = LOAD '$I_PARSED_DATA_DIR' USING SequenceFileLoader() AS (key:chararray, value:chararray);
@@ -68,14 +73,22 @@ Meta = FOREACH Meta GENERATE SURTURL(src) as src, content;
 --filter out robots.txt captures
 Meta = FILTER Meta BY not src matches '.*robots.txt$';
 
+--FILTER by url prefix
+Meta = FILTER Meta BY src matches '$I_URL_PREFIX_FILTER';
+
 ContentLines = GROUP Meta BY src;
 ContentLines = FOREACH ContentLines {
                         Content = Meta.content;
                         Content = LIMIT Content 1;
-                        GENERATE group as src, FLATTEN(Content) as content;
+                        GENERATE group as key, FLATTEN(Content) as value;
              };
 
-ContentLines = FOREACH ContentLines GENERATE BagToString(TOBAG('/',HOSTNAMEKEY(src),'/',MD5(src)),'') as key, content as value;
+ContentLines = FILTER ContentLines BY value is not null;
+
+--remove stop words and punctuation
+ContentLines = FOREACH ContentLines GENERATE key, TOKENIZE.tokenize(value,'$I_STOP_WORDS_FILE') as value;
+ContentLines = FOREACH ContentLines GENERATE key, COMPRESSWHITESPACES(value) as value;
+ContentLines = FILTER ContentLines BY value != '';
 
 STORE ContentLines into '$O_URL_CONTENT_SEQ_DIR' using SequenceFileStorage('-c com.twitter.elephantbird.pig.util.TextConverter',
 									   '-c com.twitter.elephantbird.pig.util.TextConverter');

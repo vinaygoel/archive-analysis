@@ -20,7 +20,7 @@
  * Output: Links dataset (source, timestamp, destination) - the links followed by the crawler
  */
 
-%default I_WARCMETADATAHOPINFO_DATA_DIR '/search/nara/congress112th/analysis/warc-metadata-hopinfo-files/';
+%default I_WARCMETADATAHOPINFO_DATA_DIR '/search/nara/congress112th/warc-metadata-hopinfo/';
 %default O_CRAWLLOG_ID_MAP_DIR '/search/nara/congress112th/analysis/crawllogid.map';
 %default O_CRAWLLOG_ID_ONEHOP_DIR '/search/nara/congress112th/analysis/crawllogid.onehop';
 %default O_CRAWLLOG_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-crawllog.gz';

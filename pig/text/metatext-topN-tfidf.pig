@@ -31,8 +31,7 @@ import 'tfidf.macro';
 import 'topN.macro';
 REGISTER lib/tutorial.jar;
 REGISTER lib/pigtools.jar;
-REGISTER lib/excludeWords.py using jython as EXCLUDEWORDS;
-REGISTER lib/removePunctuation.py using jython as PUNCTUATION;
+REGISTER lib/tokenize.py using jython as TOKENIZE;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 
@@ -43,11 +42,8 @@ Lines = DISTINCT Lines;
 -- Extract records and fields of interest
 Lines = FOREACH Lines GENERATE src as doc, metatext as text;
 
--- pre-process these records
-Docs = FOREACH Lines GENERATE doc, TOLOWER(text) as text;
-Docs = FOREACH Docs GENERATE doc, PUNCTUATION.removePunctuation(text) as text;
-Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
-Docs = FOREACH Docs GENERATE doc, EXCLUDEWORDS.excludeWords(text,'$I_STOP_WORDS_FILE') as text;
+--remove stop words and punctuation
+Docs = FOREACH Lines GENERATE doc, TOKENIZE.tokenize(text,'$I_STOP_WORDS_FILE') as text;
 Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
 Docs = FILTER Docs BY text != '';
 
