@@ -6,7 +6,6 @@ import string
 def tokenize(textString,excludeFile):
 	outList = []
 	excludes = set(line.strip() for line in open(excludeFile))
-        replace_punctuation = string.maketrans(string.punctuation, ' '*len(string.punctuation))
         textString = translate_non_alphanumerics(textString)
 	for word in textString.split():
 		word = word.lower()
