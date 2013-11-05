@@ -1,13 +1,21 @@
-#removes stop words and punctuation
+# -*- coding: utf-8 -*-
 import string
+
+#removes stop words and punctuation
 @outputSchema("text:chararray") 
 def tokenize(textString,excludeFile):
 	outList = []
 	excludes = set(line.strip() for line in open(excludeFile))
-	remove_punctuation_map = dict((ord(char), None) for char in string.punctuation)
+        replace_punctuation = string.maketrans(string.punctuation, ' '*len(string.punctuation))
+        textString = translate_non_alphanumerics(textString)
 	for word in textString.split():
 		word = word.lower()
-		word = word.translate(remove_punctuation_map)
 		if word not in excludes:
 			outList.append(word)
 	return ' '.join(outList)
+
+def translate_non_alphanumerics(to_translate, translate_to=u' '):
+    not_letters_or_digits = u'!"#%\'()*+,-./:;<=>?@[\]^_`{|}~'
+    translate_table = dict((ord(char), translate_to) for char in not_letters_or_digits)
+    return to_translate.translate(translate_table)
+

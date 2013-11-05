@@ -42,7 +42,6 @@ REGISTER lib/piggybank-0.10.jar;
 REGISTER lib/tokenize.py using jython as TOKENIZE;
 
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
-DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
 DEFINE FROMJSON com.twitter.elephantbird.pig.piggybank.JsonStringToMap();
 DEFINE SequenceFileLoader org.apache.pig.piggybank.storage.SequenceFileLoader();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
@@ -87,7 +86,6 @@ ContentLines = FILTER ContentLines BY value is not null;
 
 --remove stop words and punctuation
 ContentLines = FOREACH ContentLines GENERATE key, TOKENIZE.tokenize(value,'$I_STOP_WORDS_FILE') as value;
-ContentLines = FOREACH ContentLines GENERATE key, COMPRESSWHITESPACES(value) as value;
 ContentLines = FILTER ContentLines BY value != '';
 
 STORE ContentLines into '$O_URL_CONTENT_SEQ_DIR' using SequenceFileStorage('-c com.twitter.elephantbird.pig.util.TextConverter',
