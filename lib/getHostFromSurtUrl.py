@@ -15,6 +15,6 @@ def getHostFromSurtUrl(surtUrl):
 	return host
 
 def remove_chars(to_translate, translate_to=u''):
-    chars_to_remove = u'()'
-    translate_table = dict((ord(char), translate_to) for char in chars_to_remove)
-    return to_translate.translate(translate_table)
+	chars_to_remove = u'()'
+	translate_table = dict((ord(char), translate_to) for char in chars_to_remove)
+	return to_translate.translate(translate_table)
