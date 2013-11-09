@@ -17,7 +17,7 @@ PROJECTDIR=`pwd`
 IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 
 WARCMETADATAEXTRACTORDIR=$PROJECTDIR/warc-metadata-parser/
-PYTHONPATH=$WARCMETADATAEXTRACTORDIR/warctools/
+PYTHONPATH=$PROJECTDIR/warctools/
 `echo export PYTHONPATH`
 
 mkdir -p $LOCALHOPINFODIR

@@ -9,7 +9,7 @@ HADOOPCMD=$HADOOPDIR/bin/hadoop
 IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 
 WARCMETADATAEXTRACTORDIR=$PROJECTDIR/warc-metadata-parser/
-PYTHONPATH=$WARCMETADATAEXTRACTORDIR/warctools/
+PYTHONPATH=$PROJECTDIR/warctools/
 `echo export PYTHONPATH`
 
 #replace exit statements with continue if you want Job to proceed despite some failures
