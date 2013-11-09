@@ -21,7 +21,7 @@ HDFSWORKDIR=$3
 LOCALWORKDIR=$4
 
 HADOOPDIR=/home/webcrawl/hadoop-0.20.2-cdh3u3/
-PROJECTDIR=/home/vinay/github-projects/archive-analysis/
+PROJECTDIR=`pwd`
 
 JOBNAME=OUTLINKS-Generator
 HADOOPCMD=$HADOOPDIR/bin/hadoop

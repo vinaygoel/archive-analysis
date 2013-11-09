@@ -3,7 +3,7 @@
 
 # Mapper: Generate and Store HOPINFO files
 HADOOPDIR=/home/webcrawl/hadoop-0.20.2-cdh3u3/
-PROJECTDIR=/home/vinay/github-projects/archive-analysis/
+PROJECTDIR=`pwd`
 
 HADOOPCMD=$HADOOPDIR/bin/hadoop
 IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar

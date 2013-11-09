@@ -13,7 +13,7 @@ fi
 LOCALWARCDIR=$1
 LOCALOUTLINKSDIR=$2
 
-PROJECTDIR=/home/vinay/github-projects/archive-analysis/
+PROJECTDIR=`pwd`
 IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 
 WARCMETADATAEXTRACTORDIR=$PROJECTDIR/warc-metadata-parser/
