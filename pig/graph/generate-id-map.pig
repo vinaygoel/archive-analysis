@@ -29,7 +29,6 @@ A = UNION S, D;
 A = DISTINCT A;
 
 -- assign integer identifiers to sorted URLs (SURT sorted allows for pages belonging to the same host having "closer" IDs)
--- NOTE: RANK does not work in local mode!
 
 Ranked = RANK A by url;
 Store Ranked into '$O_ID_MAP_DIR';
