@@ -20,12 +20,12 @@ HDFSCDXDIR=$2
 HDFSWORKDIR=$3
 LOCALWORKDIR=$4
 
-HADOOPDIR=/home/webcrawl/hadoop-0.20.2-cdh3u3/
+#HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
 
 JOBNAME=CDX-Generator
-HADOOPCMD=$HADOOPDIR/bin/hadoop
-HADOOPSTREAMJAR=$HADOOPDIR/contrib/streaming/hadoop-streaming-*.jar
+HADOOPCMD=$HADOOP_HOME/bin/hadoop
+HADOOPSTREAMJAR=$HADOOP_HOME/contrib/streaming/hadoop-streaming-*.jar
 TASKTIMEOUT=3600000
 
 MAPPERFILE=$PROJECTDIR/hadoop-streaming/cdx/generate-cdx-mapper.sh

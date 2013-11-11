@@ -2,10 +2,10 @@
 # Author: vinay
 
 # Mapper: Generate and Store OUTLINKS files
-HADOOPDIR=/home/webcrawl/hadoop-0.20.2-cdh3u3/
+#HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
 
-HADOOPCMD=$HADOOPDIR/bin/hadoop
+HADOOPCMD=$HADOOP_HOME/bin/hadoop
 IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 
 WARCMETADATAEXTRACTORDIR=$PROJECTDIR/warc-metadata-parser/
