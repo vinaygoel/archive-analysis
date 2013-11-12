@@ -22,8 +22,8 @@
 
 %default I_PARSED_DATA_DIR '/search/nara/congress112th/parsed/';
 %default O_URL_CONTENT_SEQ_DIR '/search/nara/congress112th/analysis/parsed-captures-senategovurls.content.seq/';
-%default I_URL_PREFIX_FILTER '^gov,senate,.*$';
-%default I_STOP_WORDS_FILE 'stop-words.txt';
+%default I_URL_PREFIX_FILTER '^.*$';
+%default I_STOP_WORDS_FILE 'pig/text/stop-words.txt';
 
 SET mapred.max.map.failures.percent 10;
 SET mapred.reduce.slowstart.completed.maps 0.9

@@ -34,7 +34,7 @@ Links = LOAD '$I_LINKS_DIR' as (src:chararray, timestamp:chararray, dst:chararra
 Links = FOREACH Links GENERATE SURTURL(src) as src, ToDate(timestamp) as timestamp, SURTURL(dst) as dst, linktype, linktext;
 
 Links = FILTER Links by src is not null and dst is not null;
-Links = FILTER Links by src !='' and dst != '';
+Links = FILTER Links by src != '' and dst != '';
 Links = FILTER Links by src!=dst;
 Links = DISTINCT Links;
 

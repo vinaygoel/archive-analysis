@@ -71,6 +71,7 @@ Links = FOREACH Links GENERATE SURTURL(src) as src,
 			       COMPRESSWHITESPACES(linktext) as linktext;
 
 Links = FILTER Links by src is not null and dst is not null;
+Links = FILTER Links by src != '' and dst != '';
 
 -- remove self links
 Links = FILTER Links by src!=dst;
