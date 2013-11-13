@@ -15,7 +15,7 @@
  */
 
 /* Input: CDX (wayback index files for the collection(s))
- * Output: Breakdown of the different top level MIME types per year
+ * Output: Breakdown of MIME types per year
  */
 
 %default I_CDX_DIR '/user/vinay/gov-cdx-1995-fy2013/';
