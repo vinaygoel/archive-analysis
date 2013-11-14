@@ -6,12 +6,14 @@ def getHostFromSurtUrl(surtUrl):
 	if not surtUrl:
 		return host
 	surtUrlParts = surtUrl.split('/')
-	if len(surtUrlParts) >= 1:
-        	surtHost = surtUrlParts[0]
-        	surtHost = remove_chars(surtHost)
-       		surtHostParts = surtHost.split(',')
-        	surtHostParts.reverse()
-        	host = '.'.join(surtHostParts)
+        surtHost = surtUrlParts[0]
+	#strip port number
+	surtHostParts = surtHost.split(':')
+	surtHost = surtHostParts[0]        
+	surtHost = remove_chars(surtHost)
+       	surtHostParts = surtHost.split(',')
+        surtHostParts.reverse()
+        host = '.'.join(surtHostParts)
 	return host
 
 def remove_chars(to_translate, translate_to=u''):
