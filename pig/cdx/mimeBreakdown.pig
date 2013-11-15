@@ -58,7 +58,7 @@ BaseUrlChecksumsGrp = FOREACH BaseUrlChecksumsGrp {
                                 GENERATE FLATTEN(group) as (url,checksum), FLATTEN(Res.mime) as mime, FLATTEN(Res.compressed_size) as compressed_size; 
                         };
 
-STORE BaseUrlChecksumsGrp into '$O_MIME_BREAKDOWN_DIR/base-urls-url-checksum-mime-size.gz';
+--STORE BaseUrlChecksumsGrp into '$O_MIME_BREAKDOWN_DIR/base-urls-url-checksum-mime-size.gz';
 
 BaseUrlsMimes = GROUP BaseUrlChecksumsGrp BY mime;
 BaseUrlsMimes = FOREACH BaseUrlsMimes GENERATE group as mime, COUNT(BaseUrlChecksumsGrp) as count, SUM(BaseUrlChecksumsGrp.compressed_size) as totalSize;
