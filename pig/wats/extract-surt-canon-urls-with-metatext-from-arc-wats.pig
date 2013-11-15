@@ -64,7 +64,8 @@ DescriptionLines = FOREACH DescriptionLines GENERATE src, timestamp, metacontent
 -- let's combine all 3 sets (can be saved separately if needed)
 AllLines = UNION TitleLines, KeywordLines, DescriptionLines;
 AllLines = FILTER AllLines BY metatext != '';
-AllLines = FOREACH AllLines GENERATE src, timestamp, COMPRESSWHITESPACES(metatext) as metatext;
-AllLines = DISTINCT AllLines;
 
-STORE AllLines into '$O_METATEXT_DIR';
+AllLinesGrp = GROUP AllLines BY (src,timestamp);
+AllLinesGrp = FOREACH AllLinesGrp GENERATE FLATTEN(group) as (src,timestamp), COMPRESSWHITESPACES(BagToString(AllLines.metatext, ' ')) as metatext;
+
+STORE AllLinesGrp into '$O_METATEXT_DATA_DIR';
