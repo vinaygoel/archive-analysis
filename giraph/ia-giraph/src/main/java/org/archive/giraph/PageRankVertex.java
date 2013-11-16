@@ -45,11 +45,11 @@ public class PageRankVertex extends
 
   /** Number of supersteps */
   public static final LongConfOption MAX_SUPERSTEPS =
-      new LongConfOption("WeightedPageRankVertex.max_supersteps", 30);
+      new LongConfOption("PageRankVertex.max_supersteps", 30);
 
   /** Jump probability */
   public static final FloatConfOption JUMP_PROBABILITY =
-      new FloatConfOption("WeightedPageRankVertex.jump_probability", 0.15f);
+      new FloatConfOption("PageRankVertex.jump_probability", 0.15f);
   
   //public static final int MAX_SUPERSTEPS = 30;
   //public static final float JUMP_PROBABILITY = 0.15f;
