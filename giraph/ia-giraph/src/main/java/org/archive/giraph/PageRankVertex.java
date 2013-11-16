@@ -65,7 +65,6 @@ public class PageRankVertex extends
   public void compute(Iterable<DoubleWritable> messages) {
     if (getSuperstep() >= 1) {
       double sum = 0;
-
       for (DoubleWritable message : messages) {
         sum += message.get();
       }

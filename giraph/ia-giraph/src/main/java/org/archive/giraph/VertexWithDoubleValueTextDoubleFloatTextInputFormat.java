@@ -88,7 +88,6 @@ public class VertexWithDoubleValueTextDoubleFloatTextInputFormat
       String[] tokens =
           separator.split(getRecordReader().getCurrentValue().toString());
 
-
       List<Edge<Text, FloatWritable>> edges =
           Lists.newArrayListWithCapacity(tokens.length - 2);
 
