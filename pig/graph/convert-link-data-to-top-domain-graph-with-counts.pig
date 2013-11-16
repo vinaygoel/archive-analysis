@@ -37,6 +37,7 @@ Links = FILTER Links BY src!=dst;
 Links = DISTINCT Links;
 
 HostLinks = FOREACH Links GENERATE HOST.getHostFromSurtUrl(src) as srcHost, HOST.getHostFromSurtUrl(dst) as dstHost;
+HostLinks = FILTER HostLinks BY srcHost is not null and dstHost is not null and srcHost != '' and dstHost != '';
 DomainLinks = FOREACH HostLinks GENERATE DOMAIN(srcHost) as srcDomain, DOMAIN(dstHost) as dstDomain;
 
 DomainLinksGrp = GROUP DomainLinks BY (srcDomain,dstDomain);

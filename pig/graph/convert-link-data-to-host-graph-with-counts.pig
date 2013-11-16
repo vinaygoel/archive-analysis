@@ -34,6 +34,7 @@ Links = FILTER Links BY src!=dst;
 Links = DISTINCT Links;
 
 HostLinks = FOREACH Links GENERATE HOST.getHostFromSurtUrl(src) as srcHost, HOST.getHostFromSurtUrl(dst) as dstHost;
+HostLinks = FILTER HostLinks BY srcHost is not null and dstHost is not null and srcHost != '' and dstHost != '';
 HostLinksGrp = GROUP HostLinks BY (srcHost,dstHost);
 HostLinksGrp = FOREACH HostLinksGrp GENERATE FLATTEN(group) as (srcHost,dstHost), COUNT(HostLinks) as count;
 
