@@ -19,6 +19,7 @@
 package org.archive.giraph;
 
 import org.apache.giraph.conf.LongConfOption;
+import org.apache.giraph.conf.FloatConfOption;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.Text;
@@ -43,7 +44,16 @@ public class PageRankVertex extends
     FloatWritable, DoubleWritable> {
 
   /** Number of supersteps */
-  public static final int MAX_SUPERSTEPS = 30;
+  public static final LongConfOption MAX_SUPERSTEPS =
+      new LongConfOption("WeightedPageRankVertex.max_supersteps", 30);
+
+  /** Jump probability */
+  public static final FloatConfOption JUMP_PROBABILITY =
+      new FloatConfOption("WeightedPageRankVertex.jump_probability", 0.15f);
+  
+  //public static final int MAX_SUPERSTEPS = 30;
+  //public static final float JUMP_PROBABILITY = 0.15f;
+  
   /** Logger */
   private static final Logger LOG =
       Logger.getLogger(PageRankVertex.class);
@@ -51,8 +61,6 @@ public class PageRankVertex extends
   /** Sum aggregator names */
   private static String DANGLING_SUM_AGG = "danglingsum";
   private static String NUMVERTICES_SUM_AGG = "numvertices";
-  /** Jump probability */
-  public static final float JUMP_PROBABILITY = 0.15f;
 
   public void compute(Iterable<DoubleWritable> messages) {
     if (getSuperstep() >= 1) {
@@ -63,11 +71,12 @@ public class PageRankVertex extends
       }
       // add in the dangling factor
       sum+=this.<DoubleWritable>getAggregatedValue(DANGLING_SUM_AGG).get();
-      DoubleWritable vertexValue = new DoubleWritable(JUMP_PROBABILITY + (1-JUMP_PROBABILITY) * sum);
+      float jump_probability = JUMP_PROBABILITY.get(getConf());
+      DoubleWritable vertexValue = new DoubleWritable(jump_probability + (1-jump_probability) * sum);
       setValue(vertexValue);
       aggregate(NUMVERTICES_SUM_AGG, new LongWritable(1));
     }
-    if (getSuperstep() < MAX_SUPERSTEPS) {
+    if (getSuperstep() < MAX_SUPERSTEPS.get(getConf())) {
       long edges = getNumEdges();
       double vertexValue = getValue().get();
       //dangling nodes -- transfer score evenly to all nodes
