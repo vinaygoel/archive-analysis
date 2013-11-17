@@ -26,11 +26,11 @@
 %default O_TRANSLATE_ID_MAP_DIR 'congress109th-sample/twolevel-hosturl-id.map.translate.gz';
 
 REGISTER lib/pigtools.jar;
-DEFINE HOSTNAME pigtools.ExtractHostNameFromCanonUrlUDF();
+REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
 
 IDMap = LOAD '$I_ID_MAP_DIR' as (id:chararray, url:chararray);
 
-IDMapWithHostInfo = FOREACH IDMap GENERATE id, url, HOSTNAME(url) as hostname;
+IDMapWithHostInfo = FOREACH IDMap GENERATE id, url, HOST.getHostFromSurtUrl(url) as hostname;
 
 Ranked = RANK IDMapWithHostInfo by hostname DENSE;
 

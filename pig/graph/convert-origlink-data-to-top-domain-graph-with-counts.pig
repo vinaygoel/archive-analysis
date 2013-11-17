@@ -21,10 +21,10 @@
 %default I_LINKS_DATA_DIR '';
 %default O_TOP_DOMAIN_GRAPH_DIR '/search/nara/congress112th/analysis/top-domain.graph';
 
---brute approximation for host
-REGISTER lib/cutField.py using jython as CUTFIELD;
 REGISTER lib/guava-13.0.1.jar;
 REGISTER lib/pigtools.jar;
+
+DEFINE HOST pigtools.ExtractHostFromOrigUrlUDF();
 DEFINE DOMAIN pigtools.ExtractTopPrivateDomainFromHostNameUDF();
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);
@@ -37,7 +37,7 @@ Links = FOREACH Links GENERATE src, dst;
 --Links = FILTER Links BY src!=dst;
 --Links = DISTINCT Links;
 
-HostLinks = FOREACH Links GENERATE CUTFIELD.cutField(src,'/',2) as srcHost, CUTFIELD.cutField(dst,'/',2) as dstHost;
+HostLinks = FOREACH Links GENERATE HOST(src) as srcHost, HOST(dst) as dstHost;
 HostLinks = FILTER HostLinks BY srcHost is not null and dstHost is not null and srcHost != '' and dstHost != '';
 DomainLinks = FOREACH HostLinks GENERATE DOMAIN(srcHost) as srcDomain, DOMAIN(dstHost) as dstDomain;
 
