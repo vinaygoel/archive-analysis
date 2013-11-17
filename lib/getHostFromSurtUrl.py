@@ -11,7 +11,7 @@ def getHostFromSurtUrl(surtUrl):
 	surtHostParts = surtHost.split(':')
 	surtHost = surtHostParts[0]        
 	surtHost = remove_chars(surtHost)
-       	surtHostParts = surtHost.split(',')
+	surtHostParts = surtHost.split(',')
         surtHostParts.reverse()
         host = '.'.join(surtHostParts)
 	return host
