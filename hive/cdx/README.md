@@ -57,12 +57,12 @@ $ /home/webcrawl/hadoop/bin/hadoop fs -put LOC-MONTHLY*.cdx.gz /cdx/loc/monthly/
 Define new partition in the cdxtable (example: LOC-MONTHLY-033):
 
 ```
-hive >ALTER TABLE cdxtable ADD IF NOT EXISTS
-	> PARTITION (
-	> partner='loc',
-	> col='monthly',
-	> instance='033')
-	> LOCATION '/cdx/loc/monthly/033/';
+hive > ALTER TABLE cdxtable ADD IF NOT EXISTS
+     > PARTITION (
+     > partner='loc',
+     > col='monthly',
+     > instance='033')
+     > LOCATION '/cdx/loc/monthly/033/';
 
 ```
 

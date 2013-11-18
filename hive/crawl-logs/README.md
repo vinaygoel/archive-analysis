@@ -5,28 +5,28 @@ The Crawl Log Table is defined as an external table in Hive.
 
 ```
 hive > CREATE EXTERNAL TABLE crawllogtable                                                                                             
-	> (ts  STRING,                                                                                                                   
-	> response STRING,
-	> size STRING,
-	> url STRING,
-	> hoppath STRING,
-	> referrer STRING,
-	> mime STRING,
-	> thread STRING,
-	> downloadtime STRING,
-	> digest STRING,
-	> sourcetag STRING,
-	> crud STRING,
-	> annotation STRING )
-	> PARTITIONED BY 
-	> (partner STRING,
-	> col STRING,
-	> instance STRING)
-	> ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
-	> WITH SERDEPROPERTIES (
-	> "input.regex" = "([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+)",
-	> "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s %8$s %9$s %10$s %11$s %12$s %13$s")
-	> STORED AS TEXTFILE;
+     > (ts  STRING,                                                                                                                   
+     > response STRING,
+     > size STRING,
+     > url STRING,
+     > hoppath STRING,
+     > referrer STRING,
+     > mime STRING,
+     > thread STRING,
+     > downloadtime STRING,
+     > digest STRING,
+     > sourcetag STRING,
+     > crud STRING,
+     > annotation STRING )
+     > PARTITIONED BY 
+     > (partner STRING,
+     > col STRING,
+     > instance STRING)
+     > ROW FORMAT SERDE 'org.apache.hadoop.hive.contrib.serde2.RegexSerDe'
+     > WITH SERDEPROPERTIES (
+     > "input.regex" = "([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+)",
+     > "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s %8$s %9$s %10$s %11$s %12$s %13$s")
+     > STORED AS TEXTFILE;
 ```
 
 To list all the tables defined:
@@ -61,12 +61,12 @@ $ /home/webcrawl/hadoop/bin/hadoop fs -put crawl.log /crawl-logs/loc/monthly/033
 Define new partition in the crawllogtable (example: LOC-MONTHLY-033):
 
 ```
-hive >ALTER TABLE crawllogtable ADD IF NOT EXISTS
-	> PARTITION (
-	> partner='loc',
-	> col='monthly',
-	> instance='033')
-	> LOCATION '/crawl-logs/loc/monthly/033/';
+hive > ALTER TABLE crawllogtable ADD IF NOT EXISTS
+     > PARTITION (
+     > partner='loc',
+     > col='monthly',
+     > instance='033')
+     > LOCATION '/crawl-logs/loc/monthly/033/';
 ```
 
 Querying Data
