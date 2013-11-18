@@ -19,7 +19,7 @@
  */
 
 -- make sure to supply the stop words list as a distributed cache!!!!
---grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes 
+--grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes -p I_STOP_WORDS_FILE=stop-words.txt
 
 %default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-wats-only-crawled-resources.gz/';
 %default O_URL_ANCHORTEXT_TOPTERMS_DIR '/search/nara/congress112th/analysis/url.topanchortext.gz/';

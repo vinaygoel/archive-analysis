@@ -18,8 +18,7 @@
  * Output: Sequence files containing the source URL (SURT) and the content field (to be used to generate document vectors in Mahout)
  */
 
---grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes
-
+--grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes -p I_STOP_WORDS_FILE=stop-words.txt
 %default I_PARSED_DATA_DIR '/search/nara/congress112th/parsed/';
 %default O_URL_CONTENT_SEQ_DIR '/search/nara/congress112th/analysis/parsed-captures-senategovurls.content.seq/';
 %default I_URL_PREFIX_FILTER '^.*$';

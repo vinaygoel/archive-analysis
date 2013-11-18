@@ -18,14 +18,15 @@
  * Output: Sequence files containing the Key and the TextContent (to be used to generate document vectors in Mahout)
  */
 
---grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes
+--grunt-0.11.sh -Dmapred.cache.files="/user/vinay/stop-words.txt#stop-words.txt" -Dmapred.create.symlink=yes -p I_STOP_WORDS_FILE=stop-words.txt
 
 %default I_KEY_CONTENT_DIR '/search/nara/congress112th/parsed/';
 %default O_KEY_CONTENT_SEQ_DIR '/search/nara/congress112th/analysis/parsed-captures-senategovurls.content.seq/';
 %default I_STOP_WORDS_FILE 'pig/text/stop-words.txt';
 
 SET mapred.max.map.failures.percent 10;
-SET mapred.reduce.slowstart.completed.maps 0.9
+SET mapred.reduce.slowstart.completed.maps 0.9;
+SET mapred.task.timeout 80000000;
 
 REGISTER lib/tutorial.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
