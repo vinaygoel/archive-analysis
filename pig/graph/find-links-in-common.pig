@@ -17,13 +17,13 @@
 /* Input: Lines containing the resources for co-citation analysis (source resources)
  * Input: The id.map data that maps a unique integer to each resource
  * Input: The id-sortedint.graph data that maps a set of sorted destination IDs to each source resource
- * Output: Lines containing the set of resources that are linked-to / co-cited by the given source resources
+ * Output: Lines containing the set of resources that are linked-to by all the given source resources
  */
 
 %default I_SRC_RESOURCES_DIR '';
 %default I_ID_MAP_DIR '';
 %default I_ID_SORTEDINT_GRAPH_NO_TS_DIR '';
-%default O_CO_CITED_RESOURCES_DIR '';
+%default O_COMMON_LINKS_RESOURCES_DIR '';
 
 REGISTER lib/lucene-core-4.5.1.jar;
 REGISTER lib/kamikaze-3.0.3.jar;
@@ -60,5 +60,5 @@ CoCitedIDs = FOREACH CitationsGrp GENERATE FLATTEN(FindAndIntersectionsUsingPFor
 Joined = JOIN CoCitedIDs BY id, IDMap BY id;
 CoCitedResources = FOREACH Joined GENERATE IDMap::resource as resource;
 
-STORE CoCitedResources into '$O_CO_CITED_RESOURCES_DIR';
+STORE CoCitedResources into '$O_COMMON_LINKS_RESOURCES_DIR';
 
