@@ -94,7 +94,7 @@ IDLinks = FOREACH M2 GENERATE srcid, timestamp, key as destid;
 IDLinks2 = GROUP IDLinks by (srcid,timestamp);
 IDGraph = FOREACH IDLinks2 {
 		dests = DISTINCT IDLinks;
-		GENERATE FLATTEN(group) as (src,timestamp), dests.destid;
+		GENERATE FLATTEN(group) as (srcid,timestamp), dests.destid;
 	};
 
 STORE IDGraph into '$O_ID_GRAPH_DIR';
