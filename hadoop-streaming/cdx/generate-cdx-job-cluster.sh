@@ -20,15 +20,15 @@ HDFSCDXDIR=$2
 HDFSWORKDIR=$3
 LOCALWORKDIR=$4
 
-#HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
 
 JOBNAME=CDX-Generator
 HADOOPCMD=$HADOOP_HOME/bin/hadoop
-HADOOPSTREAMJAR=$HADOOP_HOME/contrib/streaming/hadoop-streaming-*.jar
+HADOOPSTREAMJAR=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar
 TASKTIMEOUT=3600000
 
 MAPPERFILE=$PROJECTDIR/hadoop-streaming/cdx/generate-cdx-mapper.sh
+IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 MAPPER=generate-cdx-mapper.sh
 
 #create HDFSCDXDIR
@@ -71,7 +71,7 @@ OUTPUT=$TASKDIR/result
 
 echo "Starting Hadoop Streaming job to process $num WARCs";
 # run streaming job - 1 mapper per file to be processed
-$HADOOPCMD jar $HADOOPSTREAMJAR -D mapred.job.name=$JOBNAME -D mapred.reduce.tasks=0 -D mapred.task.timeout=$TASKTIMEOUT -D mapred.line.input.format.linespermap=1 -inputformat org.apache.hadoop.mapred.lib.NLineInputFormat -input $INPUT -output $OUTPUT -mapper $MAPPER -file $MAPPERFILE
+$HADOOPCMD jar $HADOOPSTREAMJAR -D mapred.job.name=$JOBNAME -D mapred.reduce.tasks=0 -D mapred.task.timeout=$TASKTIMEOUT -D mapred.line.input.format.linespermap=1 -inputformat org.apache.hadoop.mapred.lib.NLineInputFormat -libjars $IAHADOOPTOOLS -input $INPUT -output $OUTPUT -mapper $MAPPER -file $MAPPERFILE
 
 if [ $? -ne 0 ]; then
     echo "ERROR: streaming job failed! - $INPUT"

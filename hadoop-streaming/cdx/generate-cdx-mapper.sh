@@ -2,11 +2,9 @@
 # Author: vinay
 
 # Mapper: Generate and Store CDX files
-#HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
-
 HADOOPCMD=$HADOOP_HOME/bin/hadoop
-IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
+IAHADOOPTOOLS=./ia-hadoop-tools-jar-with-dependencies.jar
 
 #replace exit statements with continue if you want Job to proceed despite some failures
 while read lineoffset warcbase warcdir cdxdir; do
@@ -48,4 +46,3 @@ while read lineoffset warcbase warcdir cdxdir; do
 	rm -f $warcbase.gz $warcbase.cdx.gz;
 	echo "$warcbase success 0";
 done
-
