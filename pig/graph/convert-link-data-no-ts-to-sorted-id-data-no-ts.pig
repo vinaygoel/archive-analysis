@@ -22,7 +22,7 @@
 -- lines containing src<tab>dst lines
 %default I_LINKS_DATA_NO_TS_DIR '/tmp/hosts.txt';
 %default O_ID_MAP_DIR '/tmp/hosts-id.map';
-%default O_ID_GRAPH_NO_TS_DIR '/tmp/hosts-id.graph-no-ts';
+%default O_ID_SORTEDINT_GRAPH_NO_TS_DIR '/tmp/hosts-id.graph-no-ts';
 
 REGISTER lib/datafu-0.0.10.jar;
 DEFINE MD5 datafu.pig.hash.MD5();
@@ -92,4 +92,4 @@ IDGraph = FOREACH IDLinks {
 		GENERATE FLATTEN(group) as srcid, dests.destid;
 	};
 STORE IDMap into '$O_ID_MAP_DIR';
-STORE IDGraph into '$O_ID_GRAPH_NO_TS_DIR';
+STORE IDGraph into '$O_ID_SORTEDINT_GRAPH_NO_TS_DIR';
