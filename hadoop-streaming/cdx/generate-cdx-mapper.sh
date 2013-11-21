@@ -3,14 +3,14 @@
 
 # Mapper: Generate and Store CDX files
 PROJECTDIR=`pwd`
-HADOOPCMD=$HADOOP_HOME/bin/hadoop
+HDFSCMD=$HADOOP_HOME/bin/hdfs
 IAHADOOPTOOLS=./ia-hadoop-tools-jar-with-dependencies.jar
 
 #replace exit statements with continue if you want Job to proceed despite some failures
 while read lineoffset warcbase warcdir cdxdir; do
 
 	#lineoffset is ignored	
-	$HADOOPCMD fs -get $warcdir/$warcbase.gz .
+	$HDFSCMD dfs -get $warcdir/$warcbase.gz .
 	copystatus=$?
 	if [ $copystatus -ne 0 ]; then 
 		rm -f $warcbase.gz
@@ -34,11 +34,11 @@ while read lineoffset warcbase warcdir cdxdir; do
                 exit 3
         fi
 
-	$HADOOPCMD fs -put $warcbase.cdx.gz $cdxdir/$warcbase.cdx.gz
+	$HDFSCMD dfs -put $warcbase.cdx.gz $cdxdir/$warcbase.cdx.gz
 	storestatus=$?
 	if [ $storestatus -ne 0 ]; then
                 rm -f $warcbase.gz $warcbase.cdx.gz;
-		$HADOOPCMD fs -rm $cdxdir/$warcbase.cdx.gz
+		$HDFSCMD dfs -rm $cdxdir/$warcbase.cdx.gz
                 echo "$warcbase cdx-store-fail $storestatus"
                 exit 4
         fi

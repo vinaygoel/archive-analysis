@@ -24,6 +24,7 @@ PROJECTDIR=`pwd`
 
 JOBNAME=CDX-Generator
 HADOOPCMD=$HADOOP_HOME/bin/hadoop
+HDFSCMD=$HADOOP_HOME/bin/hdfs
 HADOOPSTREAMJAR=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar
 TASKTIMEOUT=3600000
 
@@ -32,12 +33,12 @@ IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 MAPPER=generate-cdx-mapper.sh
 
 #create HDFSCDXDIR
-$HADOOPCMD fs -mkdir $HDFSCDXDIR 2> /dev/null
+$HDFSCMD dfs -mkdir $HDFSCDXDIR 2> /dev/null
 
 #create task dir in HDFS
 UPDATENUM=`date +%s`
 TASKDIR=$HDFSWORKDIR/$UPDATENUM
-$HADOOPCMD fs -mkdir $TASKDIR
+$HDFSCMD dfs -mkdir $TASKDIR
 
 mkdir -p $LOCALWORKDIR
 if [ $? -ne 0 ]; then
@@ -46,10 +47,10 @@ if [ $? -ne 0 ]; then
 fi
 
 #dump list of WARC files (only prefixes)
-$HADOOPCMD fs -ls $HDFSWARCDIR | grep warc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.gz@.warc@" > $LOCALWORKDIR/warcs.list 
+$HDFSCMD dfs -ls $HDFSWARCDIR | grep warc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.gz@.warc@" > $LOCALWORKDIR/warcs.list 
 
 #dump list of CDX files already generated (only prefixes)
-$HADOOPCMD fs -ls $HDFSCDXDIR | grep cdx.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.cdx.gz@.warc@"  > $LOCALWORKDIR/cdxs.list 
+$HDFSCMD dfs -ls $HDFSCDXDIR | grep cdx.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.cdx.gz@.warc@"  > $LOCALWORKDIR/cdxs.list 
 
 # find list of prefixes to be processed
 join -v1 $LOCALWORKDIR/warcs.list $LOCALWORKDIR/cdxs.list > $LOCALWORKDIR/todo.list
@@ -64,7 +65,7 @@ num=`wc -l $LOCALWORKDIR/taskfile | cut -f1 -d ' '`;
 echo "Number of new WARCs to be processed - $num";
 
 #store task file in HDFS
-$HADOOPCMD fs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
+$HDFSCMD dfs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
 
 INPUT=$TASKDIR/taskfile
 OUTPUT=$TASKDIR/result
