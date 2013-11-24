@@ -2,17 +2,16 @@
 # Author: vinay
 
 # Mapper: Generate and Store CDX files
-#HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
 
-HADOOPCMD=$HADOOP_HOME/bin/hadoop
-IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
+HDFSCMD=$HADOOP_HOME/bin/hdfs
+IAHADOOPTOOLS=./ia-hadoop-tools-jar-with-dependencies.jar
 
 #replace exit statements with continue if you want Job to proceed despite some failures
 while read lineoffset arcbase arcdir cdxdir; do
 
 	#lineoffset is ignored	
-	$HADOOPCMD fs -get $arcdir/$arcbase.gz .
+	$HDFSCMD dfs -get $arcdir/$arcbase.gz .
 	copystatus=$?
 	if [ $copystatus -ne 0 ]; then 
 		rm -f $arcbase.gz
@@ -36,11 +35,11 @@ while read lineoffset arcbase arcdir cdxdir; do
                 exit 3
         fi
 
-	$HADOOPCMD fs -put $arcbase.cdx.gz $cdxdir/$arcbase.cdx.gz
+	$HDFSCMD dfs -put $arcbase.cdx.gz $cdxdir/$arcbase.cdx.gz
 	storestatus=$?
 	if [ $storestatus -ne 0 ]; then
                 rm -f $arcbase.gz $arcbase.cdx.gz;
-		$HADOOPCMD fs -rm $cdxdir/$arcbase.cdx.gz
+		$HDFSCMD dfs -rm $cdxdir/$arcbase.cdx.gz
                 echo "$arcbase cdx-store-fail $storestatus"
                 exit 4
         fi

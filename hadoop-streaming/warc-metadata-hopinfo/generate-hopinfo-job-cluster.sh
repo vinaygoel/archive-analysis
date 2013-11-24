@@ -24,7 +24,7 @@ LOCALWORKDIR=$4
 PROJECTDIR=`pwd`
 
 JOBNAME=HOPINFO-Generator
-HADOOPCMD=$HADOOP_HOME/bin/hadoop
+HDFSCMD=$HADOOP_HOME/bin/hadoop
 HADOOPSTREAMJAR=$HADOOP_HOME/contrib/streaming/hadoop-streaming-*.jar
 TASKTIMEOUT=3600000
 
@@ -32,12 +32,12 @@ MAPPERFILE=$PROJECTDIR/hadoop-streaming/warc-metadata-hopinfo/generate-hopinfo-m
 MAPPER=generate-hopinfo-mapper.sh
 
 #create HDFSHOPINFODIR
-$HADOOPCMD fs -mkdir $HDFSHOPINFODIR 2> /dev/null
+$HDFSCMD dfs -mkdir $HDFSHOPINFODIR 2> /dev/null
 
 #create task dir in HDFS
 UPDATENUM=`date +%s`
 TASKDIR=$HDFSWORKDIR/$UPDATENUM
-$HADOOPCMD fs -mkdir $TASKDIR
+$HDFSCMD dfs -mkdir $TASKDIR
 
 mkdir -p $LOCALWORKDIR
 if [ $? -ne 0 ]; then
@@ -46,10 +46,10 @@ if [ $? -ne 0 ]; then
 fi
 
 #dump list of WARC files (only prefixes)
-$HADOOPCMD fs -ls $HDFSWARCDIR | grep warc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.gz@.warc@" > $LOCALWORKDIR/warcs.list 
+$HDFSCMD dfs -ls $HDFSWARCDIR | grep warc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.gz@.warc@" > $LOCALWORKDIR/warcs.list 
 
 #dump list of HOPINFO files already generated (only prefixes)
-$HADOOPCMD fs -ls $HDFSHOPINFODIR | grep hopinfo.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.hopinfo.gz@.warc@"  > $LOCALWORKDIR/hopinfos.list 
+$HDFSCMD dfs -ls $HDFSHOPINFODIR | grep hopinfo.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.warc.hopinfo.gz@.warc@"  > $LOCALWORKDIR/hopinfos.list 
 
 # find list of prefixes to be processed
 join -v1 $LOCALWORKDIR/warcs.list $LOCALWORKDIR/hopinfos.list > $LOCALWORKDIR/todo.list
@@ -64,7 +64,7 @@ num=`wc -l $LOCALWORKDIR/taskfile | cut -f1 -d ' '`;
 echo "Number of new WARCs to be processed - $num";
 
 #store task file in HDFS
-$HADOOPCMD fs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
+$HDFSCMD dfs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
 
 INPUT=$TASKDIR/taskfile
 OUTPUT=$TASKDIR/result

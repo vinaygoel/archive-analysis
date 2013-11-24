@@ -25,19 +25,21 @@ PROJECTDIR=`pwd`
 
 JOBNAME=CDX-Generator
 HADOOPCMD=$HADOOP_HOME/bin/hadoop
-HADOOPSTREAMJAR=$HADOOP_HOME/contrib/streaming/hadoop-streaming-*.jar
+HDFSCMD=$HADOOP_HOME/bin/hdfs
+HADOOPSTREAMJAR=$HADOOP_HOME/share/hadoop/tools/lib/hadoop-streaming-*.jar
 TASKTIMEOUT=3600000
 
-MAPPERFILE=$PROJECTDIR/hadoop-streaming/cdx/generate-cdx-mapper.sh
-MAPPER=generate-cdx-mapper.sh
+MAPPERFILE=$PROJECTDIR/hadoop-streaming/cdx/generate-cdx-mapper-arcs.sh
+MAPPER=generate-cdx-mapper-arcs.sh
+IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
 
 #create HDFSCDXDIR
-$HADOOPCMD fs -mkdir $HDFSCDXDIR 2> /dev/null
+$HDFSCMD dfs -mkdir $HDFSCDXDIR 2> /dev/null
 
 #create task dir in HDFS
 UPDATENUM=`date +%s`
 TASKDIR=$HDFSWORKDIR/$UPDATENUM
-$HADOOPCMD fs -mkdir $TASKDIR
+$HDFSCMD dfs -mkdir $TASKDIR
 
 mkdir -p $LOCALWORKDIR
 if [ $? -ne 0 ]; then
@@ -46,10 +48,10 @@ if [ $? -ne 0 ]; then
 fi
 
 #dump list of ARC files (only prefixes)
-$HADOOPCMD fs -ls $HDFSARCDIR | grep arc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.arc.gz@.arc@" > $LOCALWORKDIR/arcs.list 
+$HDFSCMD dfs -ls $HDFSARCDIR | grep arc.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.arc.gz@.arc@" > $LOCALWORKDIR/arcs.list 
 
 #dump list of CDX files already generated (only prefixes)
-$HADOOPCMD fs -ls $HDFSCDXDIR | grep cdx.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.arc.cdx.gz@.arc@"  > $LOCALWORKDIR/cdxs.list 
+$HDFSCMD dfs -ls $HDFSCDXDIR | grep cdx.gz$ | tr -s ' ' | cut -f8 -d ' ' | awk -F'/' '{ print $NF }' | sort | uniq | sed "s@.arc.cdx.gz@.arc@"  > $LOCALWORKDIR/cdxs.list 
 
 # find list of prefixes to be processed
 join -v1 $LOCALWORKDIR/arcs.list $LOCALWORKDIR/cdxs.list > $LOCALWORKDIR/todo.list
@@ -64,14 +66,14 @@ num=`wc -l $LOCALWORKDIR/taskfile | cut -f1 -d ' '`;
 echo "Number of new ARCs to be processed - $num";
 
 #store task file in HDFS
-$HADOOPCMD fs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
+$HDFSCMD dfs -put $LOCALWORKDIR/taskfile $TASKDIR/taskfile
 
 INPUT=$TASKDIR/taskfile
 OUTPUT=$TASKDIR/result
 
 echo "Starting Hadoop Streaming job to process $num ARCs";
 # run streaming job - 1 mapper per file to be processed
-$HADOOPCMD jar $HADOOPSTREAMJAR -D mapred.job.name=$JOBNAME -D mapred.reduce.tasks=0 -D mapred.task.timeout=$TASKTIMEOUT -D mapred.line.input.format.linespermap=1 -inputformat org.apache.hadoop.mapred.lib.NLineInputFormat -input $INPUT -output $OUTPUT -mapper $MAPPER -file $MAPPERFILE
+$HADOOPCMD jar $HADOOPSTREAMJAR -D mapred.job.name=$JOBNAME -D mapred.reduce.tasks=0 -D mapred.task.timeout=$TASKTIMEOUT -D mapred.line.input.format.linespermap=1 -inputformat org.apache.hadoop.mapred.lib.NLineInputFormat -libjars $IAHADOOPTOOLS -input $INPUT -output $OUTPUT -mapper $MAPPER -file $MAPPERFILE
 
 if [ $? -ne 0 ]; then
     echo "ERROR: streaming job failed! - $INPUT"

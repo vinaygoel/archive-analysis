@@ -5,9 +5,7 @@
 #HADOOP_HOME=/home/webcrawl/hadoop-0.20.2-cdh3u3/
 PROJECTDIR=`pwd`
 
-HADOOPCMD=$HADOOP_HOME/bin/hadoop
-IAHADOOPTOOLS=$PROJECTDIR/lib/ia-hadoop-tools-jar-with-dependencies.jar
-
+HDFSCMD=$HADOOP_HOME/bin/hdfs
 WARCMETADATAEXTRACTORDIR=$PROJECTDIR/warc-metadata-parser/
 PYTHONPATH=$PROJECTDIR/warctools/
 `echo export PYTHONPATH`
@@ -16,7 +14,7 @@ PYTHONPATH=$PROJECTDIR/warctools/
 while read lineoffset warcbase warcdir hopinfodir; do
 
 	#lineoffset is ignored	
-	$HADOOPCMD fs -get $warcdir/$warcbase.gz .
+	$HDFSCMD dfs -get $warcdir/$warcbase.gz .
 	copystatus=$?
 	if [ $copystatus -ne 0 ]; then 
 		rm -f $warcbase.gz
@@ -40,11 +38,11 @@ while read lineoffset warcbase warcdir hopinfodir; do
                 exit 3
         fi
 
-	$HADOOPCMD fs -put $warcbase.hopinfo.gz $hopinfodir/$warcbase.hopinfo.gz
+	$HDFSCMD dfs -put $warcbase.hopinfo.gz $hopinfodir/$warcbase.hopinfo.gz
 	storestatus=$?
 	if [ $storestatus -ne 0 ]; then
                 rm -f $warcbase.gz $warcbase.hopinfo.gz;
-		$HADOOPCMD fs -rm $hopinfodir/$warcbase.hopinfo.gz
+		$HDFSCMD dfs -rm $hopinfodir/$warcbase.hopinfo.gz
                 echo "$warcbase hopinfo-store-fail $storestatus"
                 exit 4
         fi
