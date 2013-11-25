@@ -27,11 +27,12 @@
 %default I_CRAWLLOGID_HOPPATHFROMCRAWLER_DIR '/search/nara/congress112th/analysis/crawllogid.hoppathfromcrawler';
 %default I_URL_TITLE_DIR '/search/nara/congress112th/analysis/url.title.gz';
 %default O_ORIGURL_CLOSESTVIAORIGURL_CLOSESTVIATITLE_HOPPATHFROMCLOSESTVIA_NUMHOPSROMCLOSESTVIA '/search/nara/congress112th/analysis/videos.origurl-closestviaorigurl-closestviatitle-hoppathfromclosestvia-numhopsfromclosestvia.gz';
+
 --CDH4
---REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 
 --CDH3
-REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/expandCrawlerHopPath.py using jython as EXPANDHOPS;
 
 REGISTER lib/pigtools.jar;

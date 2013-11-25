@@ -22,10 +22,10 @@
 %default I_SURT_URLS_DIR '';
 
 --CDH4
---REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 
 --CDH3
-REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
 REGISTER lib/pigtools.jar;
 DEFINE SURTURL pigtools.SurtUrlKey();

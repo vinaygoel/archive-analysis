@@ -25,10 +25,10 @@ SET mapred.max.map.failures.percent 10;
 SET mapred.reduce.slowstart.completed.maps 0.9
 
 --CDH4
---REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 
 --CDH3
-REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
 REGISTER lib/pigtools.jar;
 REGISTER lib/bacon.jar

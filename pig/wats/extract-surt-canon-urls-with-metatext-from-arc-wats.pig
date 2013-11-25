@@ -28,10 +28,10 @@ REGISTER lib/tutorial.jar;
 REGISTER lib/pigtools.jar;
 
 --CDH4
---REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 
 --CDH3
-REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+--REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
 DEFINE SURTURL pigtools.SurtUrlKey();
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
