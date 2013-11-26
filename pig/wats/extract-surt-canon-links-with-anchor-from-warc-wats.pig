@@ -30,10 +30,10 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 DEFINE URLRESOLVE org.archive.hadoop.func.URLResolverFunc();
-DEFINE SURTURL pigtools.SurtUrlKey();
-DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
+DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
 
 -- load data from I_WATS_DIR:
 Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.WARC-Header-Metadata.WARC-Target-URI',

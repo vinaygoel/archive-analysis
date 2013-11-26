@@ -25,7 +25,7 @@ SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
 
 REGISTER lib/tutorial.jar;
-REGISTER lib/pigtools.jar;
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 
 --CDH4
 REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
@@ -33,9 +33,9 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-DEFINE SURTURL pigtools.SurtUrlKey();
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
-DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
+DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
 
 -- load data from I_WATS_DIR:
 Orig = LOAD '$I_WATS_DIR' USING org.archive.hadoop.ArchiveJSONViewLoader('Envelope.ARC-Header-Metadata.Target-URI',

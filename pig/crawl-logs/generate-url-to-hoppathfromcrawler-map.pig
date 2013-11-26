@@ -29,8 +29,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 CrawlLogIdMap = LOAD '$I_CRAWLLOG_ID_MAP_DIR' as (crawllogid:long, crawllogurl:chararray);
 CrawlLogIdCrawlerHoppath = LOAD '$I_CRAWLLOGID_HOPPATHFROMCRAWLER_DIR' as (crawllogid:long, hoppathfromcrawler:chararray);

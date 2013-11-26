@@ -29,8 +29,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 LinkStats = LOAD '$I_URL_OUTDEGREE_INDEGREE_PRRANK_DIR' AS (url:chararray, outDegree:long, inDegree:long, prRank:long);
 Urls = LOAD '$I_ORIGURL_TO_FIND_DIR' AS (origurl:chararray);

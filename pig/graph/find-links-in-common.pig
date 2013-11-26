@@ -25,11 +25,8 @@
 %default I_ID_SORTEDINT_GRAPH_NO_TS_DIR '';
 %default O_COMMON_LINKS_RESOURCES_DIR '';
 
-REGISTER lib/lucene-core-4.5.1.jar;
-REGISTER lib/kamikaze-3.0.3.jar;
-REGISTER lib/pigtools.jar;
-
-DEFINE FindAndIntersectionsUsingPForDeltaDocIdSet pigtools.FindAndIntersectionsUsingPForDeltaDocIdSetUDF();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE FindAndIntersectionsUsingPForDeltaDocIdSet org.archive.porky.FindAndIntersectionsUsingPForDeltaDocIdSetUDF();
 
 --Load input
 IDMap = LOAD '$I_ID_MAP_DIR' as (id:int, resource:chararray);

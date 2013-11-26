@@ -22,10 +22,10 @@
 %default O_MIME_BREAKDOWN_DIR '/user/vinay/gov-cdx-1995-fy2013-stats/';
 
 REGISTER lib/tutorial.jar;
-REGISTER lib/pigtools.jar;
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 
-DEFINE EXTRACTYEARFROMDATE pigtools.ExtractYearFromDate();
-DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
+DEFINE EXTRACTYEARFROMDATE org.archive.porky.ExtractYearFromDate();
+DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
 
 --Load SURT CDX lines (space separated)
 CDXLines = LOAD '$I_CDX_DIR' USING PigStorage(' ') AS (url:chararray,

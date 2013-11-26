@@ -33,7 +33,7 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 REGISTER lib/tutorial.jar;
 REGISTER lib/json-simple-1.1.1.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
@@ -45,7 +45,7 @@ DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE FROMJSON com.twitter.elephantbird.pig.piggybank.JsonStringToMap();
 DEFINE SequenceFileLoader org.apache.pig.piggybank.storage.SequenceFileLoader();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
-DEFINE SURTURL pigtools.SurtUrlKey();
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
 Meta  = LOAD '$I_PARSED_DATA_DIR' USING SequenceFileLoader() AS (key:chararray, value:chararray);

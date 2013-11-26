@@ -21,11 +21,9 @@
 %default I_LINKS_DATA_DIR '';
 %default O_TOP_DOMAIN_GRAPH_DIR '/search/nara/congress112th/analysis/top-domain.graph';
 
-REGISTER lib/guava-13.0.1.jar;
-REGISTER lib/pigtools.jar;
-
-DEFINE HOST pigtools.ExtractHostFromOrigUrlUDF();
-DEFINE DOMAIN pigtools.ExtractTopPrivateDomainFromHostNameUDF();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE HOST org.archive.porky.ExtractHostFromOrigUrlUDF();
+DEFINE DOMAIN org.archive.porky.ExtractTopPrivateDomainFromHostNameUDF();
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);
 

@@ -29,8 +29,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 Links = LOAD '$I_CANON_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray, path:chararray, linktext:chararray);
 CDXLines = LOAD '$I_CDX_DIR' using PigStorage(' ') AS (curl:chararray, ts:chararray, ourl:chararray);

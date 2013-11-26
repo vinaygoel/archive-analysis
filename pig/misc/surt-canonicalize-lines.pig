@@ -27,8 +27,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 Urls = LOAD '$I_URLS_DIR' AS (ourl:chararray);
 Urls = FOREACH Urls GENERATE SURTURL(ourl) as url;

@@ -31,9 +31,9 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 
-DEFINE SURTURL pigtools.SurtUrlKey();
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 Log = LOAD '$I_CRAWLLOG_DATA_DIR' USING PigStorage() AS (line:chararray);
 

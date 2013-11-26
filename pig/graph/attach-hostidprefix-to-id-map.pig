@@ -25,7 +25,6 @@
 %default O_TWO_LEVEL_ID_MAP_DIR 'congress109th-sample/twolevel-hosturl-id.map.gz';
 %default O_TRANSLATE_ID_MAP_DIR 'congress109th-sample/twolevel-hosturl-id.map.translate.gz';
 
-REGISTER lib/pigtools.jar;
 REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
 
 IDMap = LOAD '$I_ID_MAP_DIR' as (id:chararray, url:chararray);

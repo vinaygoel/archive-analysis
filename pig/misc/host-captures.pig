@@ -22,10 +22,8 @@
 %default O_OUTPUT_DIR '';
 
 REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
---REGISTER lib/getPublicSuffixDomain.py using jython as DOMAIN;
-REGISTER lib/guava-13.0.1.jar;
-REGISTER lib/pigtools.jar;
-DEFINE DOMAIN pigtools.ExtractTopPrivateDomainFromHostNameUDF();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE DOMAIN org.archive.porky.ExtractTopPrivateDomainFromHostNameUDF();
 
 -- can be surtUrl as well
 Lines = LOAD '$I_INPUT_DIR' AS (surthost:chararray, captures:long);

@@ -27,8 +27,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 CDXLines = LOAD '$I_CDX_DIR' using PigStorage(' ') AS (curl:chararray, ts:chararray, origurl:chararray);
 CrawledUrls = foreach CDXLines GENERATE SURTURL(origurl) as url, origurl;

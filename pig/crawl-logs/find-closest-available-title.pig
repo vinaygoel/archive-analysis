@@ -35,8 +35,8 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/expandCrawlerHopPath.py using jython as EXPANDHOPS;
 
-REGISTER lib/pigtools.jar;
-DEFINE SURTURL pigtools.SurtUrlKey();
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 OrigUrlsWithoutTitles = LOAD '$I_ORIGURL_WITHOUT_TITLES_DIR' AS (origurl:chararray);
 CrawlLogIdMap = LOAD '$I_CRAWLLOG_ID_MAP_DIR' as (crawllogid:chararray, crawllogurl:chararray);

@@ -30,17 +30,16 @@ REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/pigtools.jar;
-REGISTER lib/bacon.jar
-REGISTER lib/json.jar
+REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 
-DEFINE SURTURL pigtools.SurtUrlKey();
-DEFINE COMPRESSWHITESPACES pigtools.CompressWhiteSpacesUDF();
+DEFINE SURTURL org.archive.porky.SurtUrlKey();
+DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
 
-DEFINE FROMJSON org.archive.bacon.FromJSON();
+DEFINE FROMJSON org.archive.porky.FromJSON();
+DEFINE SequenceFileLoader org.archive.porky.SequenceFileLoader();
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
-Meta  = LOAD '$I_PARSED_DATA_DIR' USING org.archive.bacon.io.SequenceFileLoader() AS (key:chararray, value:chararray);
+Meta  = LOAD '$I_PARSED_DATA_DIR' USING SequenceFileLoader() AS (key:chararray, value:chararray);
 
 -- Convert the JSON strings into Pig Map objects.
 Meta = FOREACH Meta GENERATE FROMJSON(value) AS m:[];
