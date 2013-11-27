@@ -26,15 +26,17 @@
 %default O_TASK_FILE_FOR_EXTRACTION '';
 
 --Load input
-OffPathLines = LOAD '$I_OFFSET_SRCFILEPATH' as (offset:int, srcfilepath:chararray);
+OffPathLines = LOAD '$I_OFFSET_SRCFILEPATH' as (offset:long, srcfilepath:chararray);
 OffPathLines = DISTINCT OffPathLines;
 
 --sort
-OffPathLines = RANK OffPathLines BY srcfilepath;
-OffPathLines = FOREACH OffPathLines GENERATE $0 as index, $1 as offset, $2 as srcfilepath;
+OffPathLines = FOREACH OffPathLines GENERATE CONCAT((chararray)offset,srcfilepath) as resource, offset, srcfilepath;
+OffPathLines = RANK OffPathLines BY resource;
+OffPathLines = FOREACH OffPathLines GENERATE $0 as index, $2 as offset:long, $3 as srcfilepath;
 
 --bucketize
-Tasks = FOREACH OffPathLines GENERATE (index/(int)'$I_RECORDS_PER_EXTRACTED_FILE') as partid:int, offset, srcfilepath;
+Tasks = FOREACH OffPathLines GENERATE (int)(index/(int)'$I_RECORDS_PER_EXTRACTED_FILE') as partid, offset, srcfilepath;
+
 Tasks = FOREACH Tasks GENERATE BagToString(TOBAG('$I_EXTRACTED_FILE_PREFIX','PART',partid), '-') as taskid, offset, srcfilepath;
 
 TasksGrp = GROUP Tasks BY taskid;
