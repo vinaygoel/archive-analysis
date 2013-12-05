@@ -14,22 +14,22 @@
  * permissions and limitations under the License. 
  */
 
-/* Input: URLs to be SURT canonicalized
- * Output: SURT canonicalized URLs
+/* Input: Links with timestamp information
+ * Output: A mapping of the link URLs/IDs to 64-bit fingerprint IDs (id.map)
  */
 
-%default I_URLS_DIR '';
-%default O_SURT_URLS_DIR '';
-
---CDH4
-REGISTER lib/ia-web-commons-jar-with-dependencies-CDH4.jar;
-
---CDH3
---REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
+--links from the WATs and (optionally) from the crawl.log data
+%default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-*/';
+%default O_ID_MAP_DIR '/search/nara/congress112th/analysis/id.map';
 
 REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
-DEFINE SURTURL org.archive.porky.SurtUrlKey();
+DEFINE FP org.archive.porky.Generate64BitFP();
 
-Urls = LOAD '$I_URLS_DIR' AS (ourl:chararray);
-Urls = FOREACH Urls GENERATE SURTURL(ourl) as url;
-STORE Urls into '$O_SURT_URLS_DIR';
+Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);
+S = FOREACH Links GENERATE src as url;
+D = FOREACH Links GENERATE dst as url;
+A = UNION S, D;
+A = DISTINCT A;
+
+IdMap = FOREACH A GENERATE FP(url) as id, url;
+Store IdMap into '$O_ID_MAP_DIR';
