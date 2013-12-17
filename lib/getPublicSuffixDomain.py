@@ -6,10 +6,10 @@ from publicsuffix import PublicSuffixList
 
 @outputSchema("text:chararray") 
 def getPublicSuffixDomain(host):
-	if not host:
-		return "other"
-	psl = PublicSuffixList()
-	domain = psl.get_public_suffix(host)
-	if '.' not in domain:
-        	domain = "other"
-	return domain
+   if not host:
+      return "other"
+   psl = PublicSuffixList()
+   domain = psl.get_public_suffix(host)
+   if '.' not in domain:
+           domain = "other"
+   return domain

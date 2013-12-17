@@ -4,5 +4,5 @@
 def compressWhiteSpaces(textString):
         outList = []
         for word in textString.split():
-        	outList.append(word)
+           outList.append(word)
         return ' '.join(outList)
