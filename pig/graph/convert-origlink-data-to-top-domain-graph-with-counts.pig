@@ -24,6 +24,7 @@
 REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
 DEFINE HOST org.archive.porky.ExtractHostFromOrigUrlUDF();
 DEFINE DOMAIN org.archive.porky.ExtractTopPrivateDomainFromHostNameUDF();
+SET mapred.max.map.failures.percent 10;
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);
 

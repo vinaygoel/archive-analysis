@@ -43,7 +43,7 @@ CDXLines = LOAD '$I_CDX_DIR' USING PigStorage(' ') AS (url:chararray,
 Lines = FOREACH CDXLines GENERATE url, checksum, timestamp, COMPRESSWHITESPACES(org.apache.pig.tutorial.ToLower(mime)) as mime, (compressed_size == '-'?'0':compressed_size) as compressed_size, offset, filename;
 Lines = DISTINCT Lines;
 
---STORE Lines into '$O_MIME_BREAKDOWN_DIR/all-lines-url-checksum-timestamp-mime-size-offset-filename-distinct.gz';
+STORE Lines into '$O_MIME_BREAKDOWN_DIR/all-lines-url-checksum-timestamp-mime-size-offset-filename-distinct.gz';
 
 MimeLines = FOREACH Lines GENERATE EXTRACTYEARFROMDATE(timestamp) as year, mime, (long)compressed_size as compressed_size;
 MimesGrp = GROUP MimeLines BY (year,mime);
@@ -58,7 +58,7 @@ BaseUrlChecksumsGrp = FOREACH BaseUrlChecksumsGrp {
                                 GENERATE FLATTEN(group) as (url,checksum), FLATTEN(Res.mime) as mime, FLATTEN(Res.compressed_size) as compressed_size; 
                         };
 
---STORE BaseUrlChecksumsGrp into '$O_MIME_BREAKDOWN_DIR/base-urls-url-checksum-mime-size.gz';
+STORE BaseUrlChecksumsGrp into '$O_MIME_BREAKDOWN_DIR/base-urls-url-checksum-mime-size.gz';
 
 BaseUrlsMimes = GROUP BaseUrlChecksumsGrp BY mime;
 BaseUrlsMimes = FOREACH BaseUrlsMimes GENERATE group as mime, COUNT(BaseUrlChecksumsGrp) as count, SUM(BaseUrlChecksumsGrp.compressed_size) as totalSize;
