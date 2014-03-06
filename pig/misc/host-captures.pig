@@ -22,7 +22,7 @@
 %default O_OUTPUT_DIR '';
 
 REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 DEFINE DOMAIN org.archive.porky.ExtractTopPrivateDomainFromHostNameUDF();
 
 -- can be surtUrl as well

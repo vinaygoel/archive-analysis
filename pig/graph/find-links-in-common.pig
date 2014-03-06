@@ -25,7 +25,7 @@
 %default I_ID_SORTEDINT_GRAPH_NO_TS_DIR '';
 %default O_COMMON_LINKS_RESOURCES_DIR '';
 
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 DEFINE FindAndIntersectionsUsingPForDeltaDocIdSet org.archive.porky.FindAndIntersectionsUsingPForDeltaDocIdSetUDF();
 
 --Load input

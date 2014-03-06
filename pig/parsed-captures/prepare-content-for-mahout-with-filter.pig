@@ -33,7 +33,7 @@ REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 REGISTER lib/tutorial.jar;
 REGISTER lib/json-simple-1.1.1.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;

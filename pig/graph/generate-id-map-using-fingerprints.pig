@@ -22,7 +22,7 @@
 %default I_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-*/';
 %default O_ID_MAP_DIR '/search/nara/congress112th/analysis/id.map';
 
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 DEFINE FP org.archive.porky.Generate64BitFP();
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray);

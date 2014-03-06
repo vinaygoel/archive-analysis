@@ -25,7 +25,7 @@ SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
 
 REGISTER lib/tutorial.jar;
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 
 --CDH4
 REGISTER lib/webarchive-commons-jar-with-dependencies.jar;

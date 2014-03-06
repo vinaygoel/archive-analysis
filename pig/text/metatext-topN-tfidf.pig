@@ -29,7 +29,7 @@
 import 'pig/text/tfidf.macro';
 import 'pig/text/topN.macro';
 REGISTER lib/tutorial.jar;
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 REGISTER lib/tokenize.py using jython as TOKENIZE;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();

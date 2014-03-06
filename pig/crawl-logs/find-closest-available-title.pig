@@ -35,7 +35,7 @@ REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
 REGISTER lib/expandCrawlerHopPath.py using jython as EXPANDHOPS;
 
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 DEFINE SURTURL org.archive.porky.SurtUrlKey();
 
 OrigUrlsWithoutTitles = LOAD '$I_ORIGURL_WITHOUT_TITLES_DIR' AS (origurl:chararray);

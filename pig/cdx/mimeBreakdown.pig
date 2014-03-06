@@ -22,7 +22,7 @@
 %default O_MIME_BREAKDOWN_DIR '/user/vinay/gov-cdx-1995-fy2013-stats/';
 
 REGISTER lib/tutorial.jar;
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 
 DEFINE EXTRACTYEARFROMDATE org.archive.porky.ExtractYearFromDate();
 DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();

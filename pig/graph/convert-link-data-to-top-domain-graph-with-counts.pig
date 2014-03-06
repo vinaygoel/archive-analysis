@@ -22,7 +22,7 @@
 %default O_TOP_DOMAIN_GRAPH_DIR '/search/nara/congress112th/analysis/top-domain.graph';
 
 REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
-REGISTER lib/ia-porky-jar-with-dependencies-CDH4.jar;
+REGISTER lib/ia-porky-jar-with-dependencies.jar;
 
 DEFINE DOMAIN org.archive.porky.ExtractTopPrivateDomainFromHostNameUDF();
 
