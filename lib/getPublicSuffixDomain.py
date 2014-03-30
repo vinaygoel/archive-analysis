@@ -11,5 +11,5 @@ def getPublicSuffixDomain(host):
    psl = PublicSuffixList()
    domain = psl.get_public_suffix(host)
    if '.' not in domain:
-           domain = "other"
+      domain = "other"
    return domain

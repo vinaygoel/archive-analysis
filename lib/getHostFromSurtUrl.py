@@ -6,7 +6,7 @@ def getHostFromSurtUrl(surtUrl):
    if not surtUrl:
       return None
    surtUrlParts = surtUrl.split('/')
-        surtHost = surtUrlParts[0]
+   surtHost = surtUrlParts[0]
    #strip away any text after whitespace
    surtHostParts = surtHost.split()
    if len(surtHostParts) == 0:
@@ -17,8 +17,8 @@ def getHostFromSurtUrl(surtUrl):
    surtHost = surtHostParts[0]        
    surtHost = remove_chars(surtHost)
    surtHostParts = surtHost.split(',')
-        surtHostParts.reverse()
-        host = '.'.join(surtHostParts)
+   surtHostParts.reverse()
+   host = '.'.join(surtHostParts)
    return host
 
 def remove_chars(to_translate, translate_to=u''):
