@@ -6,7 +6,7 @@ import string
 def tokenize(textString,excludeFile):
    outList = []
    excludes = set(line.strip() for line in open(excludeFile))
-      textString = translate_non_alphanumerics(textString)
+   textString = translate_non_alphanumerics(textString)
    for word in textString.split():
       word = word.lower()
       if word not in excludes:
