@@ -13,7 +13,7 @@ hive > CREATE EXTERNAL TABLE cdxtable
      > checksum STRING,
      > redirecturl STRING,
      > meta STRING,
-     > compressedcompressedsize STRING,
+     > compressedsize STRING,
      > offset STRING,
      > filename STRING)
      > PARTITIONED BY 
