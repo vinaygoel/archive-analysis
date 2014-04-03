@@ -22,7 +22,7 @@
 %default O_CANON_LINKS_DIR 'congress109th-sample/canonicalized-link-data.gz';
 
 --CDH4
-REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
+--REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;

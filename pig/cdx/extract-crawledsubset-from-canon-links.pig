@@ -24,7 +24,7 @@
 %default O_CRAWLED_CANON_LINKS_DATA_DIR '/search/nara/congress112th/analysis/links-from-wats-only-crawled-resources.gz';
 
 --CDH4
-REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
+--REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;

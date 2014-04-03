@@ -28,7 +28,7 @@ REGISTER lib/tutorial.jar;
 REGISTER lib/ia-porky-jar-with-dependencies.jar;
 
 --CDH4
-REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
+--REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;

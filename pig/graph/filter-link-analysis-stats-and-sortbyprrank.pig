@@ -24,7 +24,7 @@
 %default O_FILTERED_ORIGURL_URL_OUTDEGREE_INDEGREE_PRRANK_DIR '/search/nara/congress112th/analysis/video.url.outdegree-indegree-prrank/';
 
 --CDH4
-REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
+--REGISTER lib/webarchive-commons-jar-with-dependencies.jar;
 
 --CDH3
 --REGISTER lib/ia-web-commons-jar-with-dependencies-CDH3.jar;
