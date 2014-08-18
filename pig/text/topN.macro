@@ -14,12 +14,12 @@
  * permissions and limitations under the License.
  */
 
-DEFINE TOP_N(inRelation, docField, keyField, valueField, N) RETURNS outRelation {
+DEFINE TOP_N(inRelation, docField, keyField, valueField, nValue) RETURNS outRelation {
   Scores = FOREACH $inRelation GENERATE $docField as doc, $keyField as key, (double)$valueField as value;
   topScores = GROUP Scores BY doc;
   $outRelation = FOREACH topScores {
                 sorted = ORDER Scores BY value DESC;
-                topN = LIMIT sorted $N;
+                topN = LIMIT sorted $nValue;
                 GENERATE group as $docField, topN.(key,value);
         }; 
 };
