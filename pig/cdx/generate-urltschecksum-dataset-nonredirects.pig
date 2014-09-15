@@ -13,12 +13,12 @@
  * implied. See the License for the specific language governing
  * permissions and limitations under the License.
  */
-
-/* Input: CDX (wayback index files for the collection(s))
+urlTsCodeChecksum
+/* Input: The URL-TS-Rescode-Checksum dataset 
  * Output: A distinct set of URL-Timestamp-Checksum from non redirect pages
  */
 
-%default I_CDX_DIR '';
+%default I_REVISIT_DATA_DIR '';
 %default O_URL_TS_CHECKSUM_DIR '';
 
 REGISTER lib/tutorial.jar;
@@ -27,20 +27,13 @@ REGISTER lib/ia-porky-jar-with-dependencies.jar;
 DEFINE EXTRACTYEARFROMDATE org.archive.porky.ExtractYearFromDate();
 DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
 
---Load SURT CDX lines (space separated)
-CDXLines = LOAD '$I_CDX_DIR' USING PigStorage(' ') AS (url:chararray,
-                                                       timestamp:chararray,
-                                                       orig_url:chararray,
-						       mime:chararray,
-                                                       rescode:chararray,
-                                                       checksum:chararray,
-                                                       redirect_url:chararray,
-                                                       meta:chararray,
-                                                       compressed_size:chararray,
-                                                       offset:chararray,
-                                                       filename:chararray);
+--Load SURT Revisit lines (space separated)
+RevisitLines = LOAD '$I_REVISIT_DATA_DIR' AS (url:chararray,
+                                          timestamp:chararray,
+                                          rescode:chararray,
+                                          checksum:chararray);
 
-Lines = FILTER CDXLines BY not rescode matches '^3.*$';
+Lines = FILTER RevisitLines BY not rescode matches '^3.*$';
 Lines = FOREACH Lines GENERATE url, timestamp, checksum;
 Lines = DISTINCT Lines;
 
