@@ -21,7 +21,8 @@ hive > CREATE EXTERNAL TABLE cdxtable
      > col STRING,
      > instance STRING)
      > ROW FORMAT DELIMITED FIELDS TERMINATED BY ' '
-     > STORED AS TEXTFILE;
+     > STORED AS TEXTFILE
+     > LOCATION '<hdfs_location>';
 
 ```
 

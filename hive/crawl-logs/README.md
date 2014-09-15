@@ -5,8 +5,7 @@ The Crawl Log Table is defined as an external table in Hive.
 
 ```
 hive > CREATE EXTERNAL TABLE crawllogtable                                                                                             
-     > (ts  STRING,                                                                                                                   
-     > response STRING,
+     > (ts  STRING,                                                                                                              > response STRING,
      > size STRING,
      > url STRING,
      > hoppath STRING,
@@ -26,7 +25,8 @@ hive > CREATE EXTERNAL TABLE crawllogtable
      > WITH SERDEPROPERTIES (
      > "input.regex" = "([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+) +([^ ]+)",
      > "output.format.string" = "%1$s %2$s %3$s %4$s %5$s %6$s %7$s %8$s %9$s %10$s %11$s %12$s %13$s")
-     > STORED AS TEXTFILE;
+     > STORED AS TEXTFILE
+     > LOCATION '<hdfs_location>';
 ```
 
 To list all the tables defined:
