@@ -40,6 +40,7 @@ IdChecksumLinks = DISTINCT IdChecksumLinks;
 
 Joined = Join IdTsChecksum BY (id,checksum), IdChecksumLinks BY (id,checksum);
 ExpandedIdGraph = FOREACH Joined GENERATE IdTsChecksum::id as id, IdTsChecksum::ts as ts, IdChecksumLinks::links as links;
+ExpandedIdGraph = DISTINCT ExpandedIdGraph;
 
 STORE ExpandedIdGraph into '$O_EXPANDED_ID_GRAPH_DIR';
 
