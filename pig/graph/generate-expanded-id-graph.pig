@@ -36,6 +36,7 @@ IdTsChecksum = FOREACH Joined GENERATE IdMap::id as id, UrlTsChecksum::ts as ts,
 
 Joined = Join IdGraph BY (id,ts), IdTsChecksum BY (id,ts);
 IdChecksumLinks = FOREACH Joined GENERATE IdTsChecksum::id as id, IdTsChecksum::checksum as checksum, IdGraph::links as links;
+IdChecksumLinks = DISTINCT IdChecksumLinks;
 
 Joined = Join IdTsChecksum BY (id,checksum), IdChecksumLinks BY (id,checksum);
 ExpandedIdGraph = FOREACH Joined GENERATE IdTsChecksum::id as id, IdTsChecksum::ts as ts, IdChecksumLinks::links as links;
