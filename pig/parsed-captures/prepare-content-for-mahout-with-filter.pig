@@ -46,7 +46,7 @@ DEFINE FROMJSON com.twitter.elephantbird.pig.piggybank.JsonStringToMap();
 DEFINE SequenceFileLoader org.apache.pig.piggybank.storage.SequenceFileLoader();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
 DEFINE SURTURL org.archive.porky.SurtUrlKey();
-DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('$I_STOP_WORDS_FILE');
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
 Meta  = LOAD '$I_PARSED_DATA_DIR' USING SequenceFileLoader() AS (key:chararray, value:chararray);

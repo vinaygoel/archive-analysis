@@ -32,7 +32,7 @@ REGISTER lib/tutorial.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
 REGISTER lib/elephant-bird-pig-4.1.jar;
 
-DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('$I_STOP_WORDS_FILE');
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
 

@@ -33,7 +33,7 @@ REGISTER lib/ia-porky-jar-with-dependencies.jar;
 --REGISTER lib/tokenize.py using jython as TOKENIZE;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 --DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
-DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('$I_STOP_WORDS_FILE');
 
 
 Lines = LOAD '$I_METATEXT_DIR' as (src:chararray, timestamp:chararray, metatext:chararray);
