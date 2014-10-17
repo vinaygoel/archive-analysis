@@ -39,13 +39,14 @@ REGISTER lib/json-simple-1.1.1.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
 REGISTER lib/elephant-bird-pig-4.1.jar;
 REGISTER lib/piggybank-0.10.jar;
-REGISTER lib/tokenize.py using jython as TOKENIZE;
+--REGISTER lib/tokenize.py using jython as TOKENIZE;
 
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE FROMJSON com.twitter.elephantbird.pig.piggybank.JsonStringToMap();
 DEFINE SequenceFileLoader org.apache.pig.piggybank.storage.SequenceFileLoader();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
 DEFINE SURTURL org.archive.porky.SurtUrlKey();
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
 
 -- Load the metadata from the parsed data, which is JSON strings stored in a Hadoop SequenceFile.
 Meta  = LOAD '$I_PARSED_DATA_DIR' USING SequenceFileLoader() AS (key:chararray, value:chararray);
@@ -85,7 +86,7 @@ ContentLines = FOREACH ContentLines {
 ContentLines = FILTER ContentLines BY value is not null;
 
 --remove stop words and punctuation
-ContentLines = FOREACH ContentLines GENERATE key, TOKENIZE.tokenize(value,'$I_STOP_WORDS_FILE') as value;
+ContentLines = FOREACH ContentLines GENERATE key, TOKENIZETEXT(value) as value;
 ContentLines = FILTER ContentLines BY value != '';
 
 STORE ContentLines into '$O_URL_CONTENT_SEQ_DIR' using SequenceFileStorage('-c com.twitter.elephantbird.pig.util.TextConverter',

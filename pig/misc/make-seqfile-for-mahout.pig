@@ -31,8 +31,8 @@ SET mapred.task.timeout 80000000;
 REGISTER lib/tutorial.jar;
 REGISTER lib/elephant-bird-hadoop-compat-4.1.jar;
 REGISTER lib/elephant-bird-pig-4.1.jar;
-REGISTER lib/tokenize.py using jython as TOKENIZE;
 
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
 DEFINE SequenceFileStorage com.twitter.elephantbird.pig.store.SequenceFileStorage();
 
@@ -48,7 +48,7 @@ ContentLines = FOREACH ContentLines {
 ContentLines = FILTER ContentLines BY value is not null;
 
 --remove stop words and punctuation
-ContentLines = FOREACH ContentLines GENERATE key, TOKENIZE.tokenize(value,'$I_STOP_WORDS_FILE') as value;
+ContentLines = FOREACH ContentLines GENERATE key, TOKENIZETEXT(value) as value;
 ContentLines = FILTER ContentLines BY value != '';
 
 STORE ContentLines into '$O_KEY_CONTENT_SEQ_DIR' using SequenceFileStorage('-c com.twitter.elephantbird.pig.util.TextConverter',

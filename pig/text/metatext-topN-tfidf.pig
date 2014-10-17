@@ -30,9 +30,11 @@ import 'pig/text/tfidf.macro';
 import 'pig/text/topN.macro';
 REGISTER lib/tutorial.jar;
 REGISTER lib/ia-porky-jar-with-dependencies.jar;
-REGISTER lib/tokenize.py using jython as TOKENIZE;
+--REGISTER lib/tokenize.py using jython as TOKENIZE;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
-DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
+--DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
+
 
 Lines = LOAD '$I_METATEXT_DIR' as (src:chararray, timestamp:chararray, metatext:chararray);
 Lines = FILTER Lines BY metatext is not null AND metatext != '';
@@ -42,8 +44,9 @@ Lines = DISTINCT Lines;
 Lines = FOREACH Lines GENERATE src as doc, metatext as text;
 
 --remove stop words and punctuation
-Docs = FOREACH Lines GENERATE doc, TOKENIZE.tokenize(text,'$I_STOP_WORDS_FILE') as text;
-Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
+--Docs = FOREACH Lines GENERATE doc, TOKENIZE.tokenize(text,'$I_STOP_WORDS_FILE') as text;
+--Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
+Docs = FOREACH Lines GENERATE doc, TOKENIZETEXT(text) as text;
 Docs = FILTER Docs BY text != '';
 
 -- Use TF-IDF Macro, returns fields: doc, term, tfidf
@@ -54,4 +57,3 @@ tfIdfScores = FOREACH tfIdfScores GENERATE doc, term, (double)tfidf as tfidf;
 TopNTfIdfScores = TOP_N(tfIdfScores,'doc','term','tfidf',$N);
 
 STORE TopNTfIdfScores into '$O_URL_METATEXT_TOPTERMS_DIR'; 
-

@@ -31,9 +31,10 @@ import 'pig/text/tfidf.macro';
 import 'pig/text/topN.macro';
 REGISTER lib/tutorial.jar;
 REGISTER lib/ia-porky-jar-with-dependencies.jar;
-REGISTER lib/tokenize.py using jython as TOKENIZE;
+--REGISTER lib/tokenize.py using jython as TOKENIZE;
 DEFINE TOLOWER org.apache.pig.tutorial.ToLower();
-DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
+--DEFINE COMPRESSWHITESPACES org.archive.porky.CompressWhiteSpacesUDF();
+DEFINE TOKENIZETEXT org.archive.porky.TokenizeTextUDF('stop-words.txt');
 
 Links = LOAD '$I_LINKS_DATA_DIR' as (src:chararray, timestamp:chararray, dst:chararray, path:chararray, linktext:chararray);
 Links = FILTER Links BY linktext is not null and linktext != '';
@@ -43,8 +44,9 @@ Links = DISTINCT Links;
 Links = FOREACH Links GENERATE dst as doc, linktext as text;
 
 --remove stop words and punctuation
-Docs = FOREACH Links GENERATE doc, TOKENIZE.tokenize(text,'$I_STOP_WORDS_FILE') as text;
-Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
+--Docs = FOREACH Links GENERATE doc, TOKENIZE.tokenize(text,'$I_STOP_WORDS_FILE') as text;
+--Docs = FOREACH Docs GENERATE doc, COMPRESSWHITESPACES(text) as text;
+Docs = FOREACH Links GENERATE doc, TOKENIZETEXT(text) as text;
 Docs = FILTER Docs BY text != '';
 
 -- Use TF-IDF Macro, returns fields: doc, term, tfidf
