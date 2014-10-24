@@ -19,7 +19,7 @@
  */
 
 %default I_WATS_DIR '/search/nara/congress112th/wats/';
-%default O_METATEXT_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
+%default O_METATEXT_DATA_DIR '/search/nara/congress112th/analysis/metatext-from-wats.gz/';
 
 SET pig.splitCombination 'false';
 SET mapred.max.map.failures.percent 10;
