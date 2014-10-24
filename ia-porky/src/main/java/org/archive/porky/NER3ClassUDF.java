@@ -108,10 +108,14 @@ public class NER3ClassUDF extends EvalFunc<String> {
 						entityBuffer+= " " + wordText;
 				} 
 			}
-		}
-		//final commit
-		if(prevEntityType != NERClassType.O && !entityBuffer.equals("")) {
-			entitiesByType.get(prevEntityType).add(entityBuffer);
+			//end of sentence
+			//apply commit and reset
+			if(prevEntityType != NERClassType.O && !entityBuffer.equals("")) {
+				entitiesByType.get(prevEntityType).add(entityBuffer);
+				entityBuffer = "";
+			}
+			//reset
+			prevEntityType = NERClassType.O;
 			entityBuffer = "";
 		}
 		return entitiesByType.toString();
