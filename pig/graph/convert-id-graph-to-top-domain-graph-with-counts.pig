@@ -21,7 +21,7 @@
 
 %default I_ID_GRAPH_DIR '';
 %default I_ID_MAP_DIR '';
-%default O__GRAPH_DIR '';
+%default O_TOP_DOMAIN_GRAPH_DIR '';
 
 REGISTER lib/getHostFromSurtUrl.py using jython as HOST;
 REGISTER lib/ia-porky-jar-with-dependencies.jar;
