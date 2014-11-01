@@ -57,7 +57,7 @@ public class NER3ClassUDF extends EvalFunc<String> {
   AbstractSequenceClassifier<CoreLabel> classifier = null;
 
   public NER3ClassUDF(String file) {
-  	serializedClassifier = file;
+  	serializedClassifier = "./" + file;
   }
 
   public enum NERClassType { PERSON, ORGANIZATION, LOCATION, O }
@@ -125,9 +125,10 @@ public class NER3ClassUDF extends EvalFunc<String> {
         }
   }
 
+/*
   public List<String> getCacheFiles() {
 	List<String> list = new ArrayList<String>(1);
 	list.add(serializedClassifier + "#english.all.3class.distsim.crf.ser.gz");
 	return list;
-  }
+  } */
 }

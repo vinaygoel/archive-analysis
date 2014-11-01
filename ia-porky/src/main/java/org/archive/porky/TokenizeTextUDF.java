@@ -53,7 +53,7 @@ public class TokenizeTextUDF extends EvalFunc<String> {
   CharArraySet stopSet = null;
 
   public TokenizeTextUDF(String file) {
-  	stopWordsFile = file;
+  	stopWordsFile = "./" + file;
   }
 
   public String exec(Tuple input) throws IOException {
@@ -72,7 +72,7 @@ public class TokenizeTextUDF extends EvalFunc<String> {
 			List<String> stopWords = new ArrayList<String>();
 			//read in stop words file
 			// Open the file as a local file.
-			FileReader fr = new FileReader("./stop-words.txt");
+			FileReader fr = new FileReader(stopWordsFile);
 			BufferedReader d = new BufferedReader(fr);
 			String line;
 			while ((line = d.readLine()) != null) {
@@ -97,10 +97,10 @@ public class TokenizeTextUDF extends EvalFunc<String> {
                 return emptyString;
         }
   }
-
+/*
   public List<String> getCacheFiles() {
 	List<String> list = new ArrayList<String>(1);
 	list.add(stopWordsFile + "#stop-words.txt");
 	return list;
-  }
+  } */
 }
