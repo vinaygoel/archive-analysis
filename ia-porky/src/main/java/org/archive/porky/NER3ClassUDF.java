@@ -28,6 +28,7 @@ import org.apache.pig.data.TupleFactory;
 import org.apache.pig.data.DataBag;
 import org.apache.pig.data.DataType;
 import org.apache.pig.data.Tuple;
+import org.apache.pig.builtin.MonitoredUDF;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Iterator;
@@ -45,19 +46,21 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.Integer;
+import java.util.concurrent.TimeUnit;
 
 /**
  * UDF which reads in a text string, and returns entities identified by the configured Stanford NER classifier
  * @author vinay
  */ 
 
+//@MonitoredUDF(timeUnit = TimeUnit.MILLISECONDS, duration = 120000, stringDefault = "{PERSON=[], ORGANIZATION=[], LOCATION=[]}")
 public class NER3ClassUDF extends EvalFunc<String> {
 	
   String serializedClassifier;
   AbstractSequenceClassifier<CoreLabel> classifier = null;
 
   public NER3ClassUDF(String file) {
-  	serializedClassifier = "./" + file;
+  	serializedClassifier = file;
   }
 
   public enum NERClassType { PERSON, ORGANIZATION, LOCATION, O }
@@ -77,16 +80,18 @@ public class NER3ClassUDF extends EvalFunc<String> {
 	if(input == null || input.size() == 0) {
 		return emptyString;
 	}
+
 	try {
 		String textString = (String)input.get(0);
 		if(textString == null) {
 			return emptyString;
 		}
+		
 		if(classifier == null) {
 			//initialize
 			classifier = CRFClassifier.getClassifier(serializedClassifier);
 		}
-
+		
 		List<List<CoreLabel>> out = classifier.classify(textString);
 		for (List<CoreLabel> sentence : out) {
 			for (CoreLabel word : sentence) {
@@ -120,15 +125,10 @@ public class NER3ClassUDF extends EvalFunc<String> {
 		}
 		return entitiesByType.toString();
 	
-	} catch(Exception e){
+	} catch(Exception e) { 
+		if(classifier == null)
+			throw WrappedIOException.wrap("Unable to load classifier ", e);
                 return emptyString;
         }
   }
-
-/*
-  public List<String> getCacheFiles() {
-	List<String> list = new ArrayList<String>(1);
-	list.add(serializedClassifier + "#english.all.3class.distsim.crf.ser.gz");
-	return list;
-  } */
 }
