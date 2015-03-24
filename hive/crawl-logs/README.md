@@ -5,7 +5,8 @@ The Crawl Log Table is defined as an external table in Hive.
 
 ```
 hive > CREATE EXTERNAL TABLE crawllogtable                                                                                             
-     > (ts  STRING,                                                                                                              > response STRING,
+     > (ts  STRING,                                                                                                              
+     > response STRING,
      > size STRING,
      > url STRING,
      > hoppath STRING,
