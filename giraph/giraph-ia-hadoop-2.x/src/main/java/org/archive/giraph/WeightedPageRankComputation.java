@@ -21,6 +21,7 @@ package org.archive.giraph;
 import org.apache.giraph.graph.BasicComputation;
 import org.apache.giraph.conf.LongConfOption;
 import org.apache.giraph.conf.FloatConfOption;
+import org.apache.giraph.conf.BooleanConfOption;
 import org.apache.giraph.edge.Edge;
 import org.apache.giraph.graph.Vertex;
 import org.apache.hadoop.io.Text;
@@ -53,6 +54,10 @@ public class WeightedPageRankComputation extends
   private static final FloatConfOption JUMP_PROBABILITY =
       new FloatConfOption("WeightedPageRankComputation.jumpProbability",
         0.15f, "Jump probability");
+  /** Split By Weight Flag */
+  private static final BooleanConfOption SUM_EDGE_WEIGHTS_FLAG =
+      new BooleanConfOption("WeightedPageRankComputation.sumEdgeWeightsFlag",
+        true, "Sum Edge Weights Flag (true/false)");
 
   /** Logger */
   private static final Logger LOG =
@@ -92,6 +97,10 @@ public class WeightedPageRankComputation extends
         float totalEdgeWeight = 0;
         for (Edge<Text, FloatWritable> edge : vertex.getEdges()) {
           totalEdgeWeight += edge.getValue().get();
+        }
+        boolean sumEdgeWeightsFlag = SUM_EDGE_WEIGHTS_FLAG.get(getConf());
+        if (!sumEdgeWeightsFlag) {
+          totalEdgeWeight = 1;
         }
         //Pass 2: send weighted PR value to each neighbor
         if (totalEdgeWeight > 0) {
