@@ -27,7 +27,7 @@ mime_year_result = defaultdict(dict)
 for cdx_line in sys.stdin:
     cdx_line = cdx_line.rstrip('\n')
     cdx_parts = cdx_line.split(' ')
-    if len(cdx_parts) != 11:
+    if len(cdx_parts) < 11:
         continue
     (url,host,ts,orig,mime,rescode,digest) = (cdx_parts[0],
                                                    host_from_surt_url(cdx_parts[0]),
